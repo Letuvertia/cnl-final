@@ -1,7 +1,0 @@
-{
-  "name": "hello-vue",
-  "version": "1.0.0",
-  "scripts": {
-    "serve": "vue serve"
-  }
-}
