@@ -8,25 +8,26 @@ WORKDIR /app
 ENV TZ=Asia/Taipei \
     DEBIAN_FRONTEND=noninteractive
 
-# Copy React app files
+# Install Node.js
+RUN apt-get update && \
+    apt-get install -y tzdata nodejs npm
+
+# Copy Vue app files
 COPY web/frontend/ ./frontend
 
-# Install Node.js and dependencies (for React)
-RUN apt-get update && \
-    apt-get install -y tzdata nodejs npm && \
-    npm install -g react-scripts && \
-    npm install
-
-# Build React app for production
+# Install dependencies for Vue app
 WORKDIR /app/frontend
-RUN npm run build
+RUN npm install
 
 # Copy Flask app files
 WORKDIR /app
 COPY web/backend/ ./backend
 
 # Install Python dependencies (for Flask)
-RUN apt-get update && apt-get install -y python3 python3-pip python3-venv libmysqlclient-dev && python3 -m venv venv && source venv/bin/activate && pip install Flask SQLAlchemy pymysql
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-venv libmysqlclient-dev && \
+    python3 -m venv venv && source venv/bin/activate && \
+    pip install Flask SQLAlchemy pymysql
 
 # Environment variables (replace with your database details)
 ENV DB_HOST=radius

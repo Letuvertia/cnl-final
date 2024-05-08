@@ -8,9 +8,11 @@ There are 2 docker containers in this design, `web` and `radius`.
 
 ### Web
 1. Frontend
+
 We use `React.js` as web frontend framework. All the Javascript files are stored at `web/frontend/`.
 
 2. Backend
+
 We use `Flask` as web backend framework. All the Python files are stored at `web/backend`.
 
 ### Radius
