@@ -16,6 +16,7 @@ DATABASE_URI = f"mysql+pymysql://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_H
 
 engine = create_engine(DATABASE_URI)
 Base = declarative_base()
+Base.metadata.create_all(engine)
 
 
 class User(Base):
@@ -35,12 +36,7 @@ def execute_sql_file(filepath):
         print(f"Schema file {filepath} not found. Skipping import.")
 
 
-Base.metadata.create_all(engine)
-
-# Check and potentially import schema.sql
-execute_sql_file("db/schema.sql")
-
 if __name__ == "__main__":
-    # Example usage (replace with your logic)
-    # ... (create users, etc.)
+    # Check and potentially import schema.sql
+    # execute_sql_file("db/schema.sql")
     pass

@@ -1,30 +1,40 @@
 version: "3.9"
 
 services:
-  radius:
+  db:
     build:
       context: .
-      dockerfile: ./radius.dockerfile 
-    restart: unless-stopped
-    ports:
-      - "1812:1812"  # Map container port 1812 to host port 1812
+      dockerfile: dockerfile/db.dockerfile 
     networks:
       - my-internal-network
 
-  web:
+  backend:
     build:
       context: .
-      dockerfile: ./web.dockerfile
-    restart: unless-stopped
-    ports:
-      - "5000:5000"  # Map container port 5000 to host port 5000
-    depends_on:
-      - radius  # Start web service after FreeRadius is ready
+      dockerfile: dockerfile/backend.dockerfile
     networks:
       - my-internal-network
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
     volumes:
-      - ./db:./db
-  
+      - ./backend:/app/backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfile/frontend.dockerfile
+    networks:
+      - my-internal-network
+    depends_on:
+      - db
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+
 networks:
   my-internal-network:
     driver: bridge
