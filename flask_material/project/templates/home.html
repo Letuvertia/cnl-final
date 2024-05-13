@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}首頁 ｜Login Exp{% endblock %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<h1 class="display-4">{{current_user.username}}</h1>
+{% else %}
+<p>請 <a href="{{url_for('login')}}">登入帳號</a> 或 <a href="{{url_for('register')}}">註冊帳號</a>
+</p>
+{% endif %}
+
+{% endblock %}
