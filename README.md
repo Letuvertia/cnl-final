@@ -52,8 +52,10 @@ curl "http://localhost:5000/userdata?uid=123"
 Install Node.js and run the server. Make sure that you're located at `./frontend` before running `npm` commands.
 
 ```bash
-# Setup
-apt-get update && apt-get install -y nodejs npm
+# Install Node.js and npm with nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install lts/hydrogen # v18.20.2
 
 # Go to the root folder for the Vue app
 cd frontend

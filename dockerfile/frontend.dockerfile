@@ -1,5 +1,5 @@
 # Base image
-FROM node:latest
+FROM node:lts-hydrogen
 
 WORKDIR /app
 
