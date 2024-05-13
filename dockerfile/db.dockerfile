@@ -10,7 +10,8 @@ ENV TZ=Asia/Taipei \
 
 # Install FreeRadius
 RUN apt-get update && \
-    apt-get install -y tzdata freeradius freeradius-mysql
+    apt-get install -y tzdata freeradius freeradius-mysql && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy Radius configuration files
 COPY db db

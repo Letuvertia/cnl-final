@@ -10,7 +10,8 @@ ENV TZ=Asia/Taipei \
 
 # Install Python and Flask
 RUN apt-get update && \
-    apt-get install -y tzdata python3 python3-pip python3-venv libmysqlclient-dev
+    apt-get install -y tzdata python3 python3-pip python3-venv libmysqlclient-dev && \
+    rm -rf /var/lib/apt/lists/*
 RUN python3 -m venv venv && . venv/bin/activate && \
     pip install Flask SQLAlchemy pymysql gunicorn
 

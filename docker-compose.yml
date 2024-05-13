@@ -6,14 +6,14 @@ services:
       context: .
       dockerfile: dockerfile/db.dockerfile 
     networks:
-      - my-internal-network
+      - internal-network
 
   backend:
     build:
       context: .
       dockerfile: dockerfile/backend.dockerfile
     networks:
-      - my-internal-network
+      - internal-network
     depends_on:
       - db
     ports:
@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: dockerfile/frontend.dockerfile
     networks:
-      - my-internal-network
+      - internal-network
     depends_on:
       - db
       - backend
@@ -36,5 +36,5 @@ services:
       - ./frontend/src:/app/src
 
 networks:
-  my-internal-network:
+  internal-network:
     driver: bridge
