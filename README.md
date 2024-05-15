@@ -89,3 +89,165 @@ npm run dev
 ```
 
 Go to http://localhost:5173 to check out the website.
+
+## API spec
+### `/register` (POST)
+Register an user account with user data.
+
+Arg:
+```json
+{
+    "username": "",
+    "password": "",
+    "email": ""
+}
+```
+Return:
+```json
+{
+    "register_status": "", // success or fail
+}
+```
+
+### `/login` (POST)
+Login with user crendentials.
+
+Arg:
+```json
+{
+    "username": "",
+    "password": "",
+    "location": ""
+}
+```
+Return:
+```json
+{
+    "auth_status": "", // success or fail
+    "data": {
+        "userdata": {
+            "username": "",
+            "userid": "",
+            "email": "",
+            "location": ""
+        },
+        "msg_feed": [
+            {
+                "msg_id": "",
+                "msg_content": "",
+                "msg_likes": "",
+                "msg_location": "",
+                "msg_user": ""
+            },
+            {
+                "msg_id": "",
+                "msg_content": "",
+                "msg_likes": "",
+                "msg_location": "",
+                "msg_user": ""
+            },
+            ...
+        ]
+    }
+}
+```
+
+### `/userdata` (GET)
+Get user data.
+
+Arg:
+- `userid`
+Return:
+```json
+{
+    "username": "",
+    "password": "",
+    "email": "",
+    "location": ""
+}
+```
+
+### `/feed` (GET)
+Get message feed.
+
+Arg:
+- `userid`
+Return:
+```json
+[
+    {
+        "msg_id": "",
+        "msg_content": "",
+        "msg_likes": "",
+        "msg_location": "",
+        "msg_user": ""
+    },
+    {
+        "msg_id": "",
+        "msg_content": "",
+        "msg_likes": "",
+        "msg_location": "",
+        "msg_user": ""
+    },
+    ...
+]
+```
+
+### `/location` (POST)
+Send an updated location of the user to the backend. Get the updated message feed.
+
+Arg:
+```json
+{
+    "userid": "",
+    "location": ""
+}
+```
+Return:
+```json
+[
+    {
+        "msg_id": "",
+        "msg_content": "",
+        "msg_likes": "",
+        "msg_location": "",
+        "msg_user": ""
+    },
+    {
+        "msg_id": "",
+        "msg_content": "",
+        "msg_likes": "",
+        "msg_location": "",
+        "msg_user": ""
+    },
+    ...
+]
+```
+
+### `/message` (PUT)
+Send a new message that user enters to the backend.
+Update the message directly on the main view.
+
+Arg:
+```json
+{
+    "userid": "",
+    "new_msg": {
+        "msg_content": "",
+        "msg_location": "",
+        "msg_user": ""
+    }
+}
+```
+
+### `/like` (PUT)
+Send an like of a message from the user to the backend.
+Update the number of likes directly on the main view.
+
+Arg:
+```json
+{
+    "userid": "",
+    "msg_id": "",
+}
+```
