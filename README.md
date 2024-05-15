@@ -157,6 +157,7 @@ Get user data.
 
 Arg:
 - `userid`
+
 Return:
 ```json
 {
@@ -172,6 +173,7 @@ Get message feed.
 
 Arg:
 - `userid`
+
 Return:
 ```json
 [
