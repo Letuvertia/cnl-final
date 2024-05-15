@@ -1,9 +1,10 @@
 import os
 import subprocess
+import numpy as np
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Row, Integer, String, ForeignKey,relationship
 
 # Database connection details
 DATABASE_HOST = "radius"  # Update with your FreeRadius container name or IP
@@ -25,7 +26,17 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(128), nullable=False)  # Consider using a hashing mechanism
+    message_history = relationship("Message", back_populates="user")
 
+class Message(Base):
+    __tablename__ = 'messages'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    row_number = Column(Integer, nullable=False)
+    column_number = Column(Integer, nullable=False)
+    thumb_num= Row(String, nullable=False)
+    value = Column(String, nullable=False)  # Using Text to store longer sentences
+    user = relationship('User', back_populates='message_history')
 
 def execute_sql_file(filepath):
     if os.path.exists(filepath):
