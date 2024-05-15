@@ -44,7 +44,7 @@ export default {
         userLogin() {
             this.login_check(this.user.email, this.user.password)
             .then(() => {
-                this.$router.push("/admin");
+                this.$router.push("/");
             })
             .catch((error) => {
                 alert(error.message);
