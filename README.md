@@ -22,11 +22,28 @@ Run the frontend server on http://localhost:5173. `frontend` serves the LocaSync
 2. Run `./run.sh`
 
 ## Notes for Developers
-大家看這裡！！
+**大家看這裡！！**
 
 ### Use branch!
 
 Open a new branch and develop features (or add new files if needed) in the corresponding folder. When you're finished, open a pull request and fix merge conflict first before merging the branch into the main branch.
+
+
+```bash
+# Create a new branch
+git checkout -b "your-new-branch-name"
+
+# If you finished and want to merge the branch to the main,
+# 1. Merge the main into your branch first and resolve conflicts.
+git checkout "your-branch-name"
+git merge main
+
+# 2. Open a pull request on Github (https://github.com/Letuvertia/cnl-final/pulls)
+
+# 3. Ask other teammates to review your branch before you merge.
+
+# 4. If everything is good, merge the branch on the Github by pressing the merge button. This will close the pull request at the same time.
+```
 
 ### (Optinal) Develop on Local
 If you're developing a feature that is only on `backend` or `frontend` side, it is maybe easier to use local environment instead of the docker environment, which connects everything and is more likely to have bugs.
@@ -35,7 +52,7 @@ Here's how to install the dependencie on the local environment:
 
 1. `backend`
 
-Install Python and execute files in `./backend/`.
+Install Python and execute files in `./backend`.
 
 ```bash
 python3 backend/main.py
@@ -44,6 +61,7 @@ python3 backend/main.py
 To test an API, use `curl`.
 
 ```bash
+# This is an example API `/userdata` with one argument `uid`.
 curl "http://localhost:5000/userdata?uid=123"
 ```
 
