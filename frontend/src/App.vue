@@ -28,12 +28,9 @@ export default {
       <div class="wrapper">
         <nav>
           <RouterLink to="/" class="nav-link">Home</RouterLink>
-          <RouterLink to="/about" class="nav-link">About</RouterLink>
-          <RouterLink to="/login" class="nav-link">Login</RouterLink>
-          <RouterLink to="/register" class="nav-link">Register</RouterLink>
+          <RouterLink to="/user" class="nav-link">User</RouterLink>
         </nav>
       </div>
     </header>
-    <HelloWorld msg="You did it!" />
   <RouterView />
 </template>
