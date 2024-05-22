@@ -1,7 +1,7 @@
 <template>
     <div class="container m-5">
         <form @submit.prevent="userLogin">
-            <h3>Login</h3>
+            <h1>Login</h1>
             <div class="form-group">
                 <label>Email</label>
                 <input
@@ -19,11 +19,8 @@
                 />
             </div>
             <button type="submit" class="btn btn-dark btn-lg btn-block">Login</button>
-            <button class="btn btn-dark btn-lg btn-block">
+            <p class="text-right mt-2 mb-4">
                 <RouterLink to="/register">Register</RouterLink>
-            </button>
-            <p class="forgot-password text-right mt-2 mb-4">
-                <RouterLink to="/forgot-password">Forgot your password?</RouterLink>
             </p>
         </form>
     </div>

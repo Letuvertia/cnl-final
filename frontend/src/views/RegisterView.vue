@@ -1,7 +1,7 @@
 <template>
     <div class="container m-5">
         <form @submit.prevent="userRegistration">
-            <h3>Register</h3>
+            <h1>Register</h1>
             <div class="form-group">
                 <label>Name</label>
                 <input
@@ -32,7 +32,7 @@
                 Register
             </button>
         
-            <p class="forgot-password text-right">
+            <p class="text-right">
                 Already registered?
                 <router-link to="/login">Login</router-link>
             </p>

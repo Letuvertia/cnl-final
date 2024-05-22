@@ -5,6 +5,7 @@
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+  width: 100%;
 }
 
 a,
@@ -64,4 +65,12 @@ a,
 
 .content {
   padding-top: 60px; /* Adjust to compensate for the fixed navigation bar */
+}
+
+.message-table {
+  width: 80%;
+}
+
+.likes-cell {
+  text-align: right;
 }
