@@ -1,20 +1,20 @@
 from flask import Flask, request, jsonify
 
+from sql import MySQLConnector
+
 api = Flask(__name__)
 
-# Sample user data (replace with your data source)
-user_db = {
-  123: {
-    "name": "John Doe",
+# Sample user data (only for testing)
+user_db = [
+  {
+    "username": "John Doe",
     "email": "john.doe@example.com",
-    "id": 123
   },
-  124: {
-    "name": "Ann Doe",
+  {
+    "username": "Ann Doe",
     "email": "ann.doe@example.com",
-    "id": 124
   }
-}
+]
 
 @api.route("/userdata", methods=['POST'])
 def get_user_data():
@@ -31,5 +31,13 @@ def get_user_data():
   
 
 
+
 if __name__ == "__main__":
-  api.run(host="0.0.0.0", port=5000)
+    # test sql
+    connector = MySQLConnector()
+    connector.add_user(user_db[0])
+    user = connector.get_user(1)
+    print(user)
+
+    # start api server
+    # api.run(host="0.0.0.0", port=5000)
