@@ -24,18 +24,16 @@ export default {
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/register">Register</RouterLink>
-      </nav>
-    </div>
-  </header>
-
+    <header class="nav-bar">
+      <div class="wrapper">
+        <nav>
+          <RouterLink to="/" class="nav-link">Home</RouterLink>
+          <RouterLink to="/about" class="nav-link">About</RouterLink>
+          <RouterLink to="/login" class="nav-link">Login</RouterLink>
+          <RouterLink to="/register" class="nav-link">Register</RouterLink>
+        </nav>
+      </div>
+    </header>
+    <HelloWorld msg="You did it!" />
   <RouterView />
 </template>
