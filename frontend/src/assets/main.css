@@ -33,3 +33,35 @@ a,
     padding: 0 2rem;
   }
 }
+
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it's above other content */
+  background-color: var(--color-background); /* Use the light background color defined in base.css */
+  color: var(--color-heading); /* Use the heading text color defined in base.css */
+  padding: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.nav-link {
+  color: var(--color-heading); /* Use the heading text color defined in base.css */
+  text-decoration: none;
+  margin-right: 20px;
+  font-size: 16px;
+}
+
+.content {
+  padding-top: 60px; /* Adjust to compensate for the fixed navigation bar */
+}
