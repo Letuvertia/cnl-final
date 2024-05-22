@@ -16,14 +16,20 @@ user_db = [
   }
 ]
 
-@api.route("/userdata")
+@api.route("/userdata", methods=['POST'])
 def get_user_data():
   """Returns user data in JSON format"""
   uid = int(request.args.get('uid'))
+
+  if not uid:
+    return jsonify({'error': 'User ID is required'}), 400
+  
   if uid in user_db.keys():
     return jsonify(user_db[uid])
   else:
-    return "User Not Found"
+    return jsonify({'error': 'User not found'}), 404
+  
+
 
 
 if __name__ == "__main__":
