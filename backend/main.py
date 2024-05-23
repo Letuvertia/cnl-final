@@ -45,16 +45,16 @@ def login():
 
     user = db_connector.get_user_by_username(username)
     if user and user[0][2] == password:  # Password verification (hashing should be implemented in real applications)
-        userid = user[0][0]
-        db_connector.update_user_location(userid, location)
-        user_data = db_connector.get_user(userid)
-        msg_feed = db_connector.get_message_feed(userid)
+        uid = user[0][0]
+        db_connector.update_user_location(uid, location)
+        user_data = db_connector.get_user(uid)
+        msg_feed = db_connector.get_message_feed(uid)
         return jsonify({
             'auth_status': 'success',
             'data': {
                 'userdata': {
                     'username': user_data[0][1],
-                    'userid': user_data[0][0],
+                    'uid': user_data[0][0],
                     'email': user_data[0][3],
                     'location': user_data[0][4]
                 },
@@ -66,11 +66,11 @@ def login():
 
 @api.route("/userdata", methods=['GET'])
 def get_user_data():
-    userid = request.args.get('userid')
-    if not userid:
+    uid = request.args.get('uid')
+    if not uid:
         return jsonify({'error': 'User ID is required'}), 400
 
-    user = db_connector.get_user(userid)
+    user = db_connector.get_user(uid)
     if user:
         return jsonify({
             'username': user[0][1],
@@ -83,49 +83,57 @@ def get_user_data():
 
 @api.route("/feed", methods=['GET'])
 def get_feed():
-    userid = request.args.get('userid')
-    if not userid:
+    uid = request.args.get('uid')
+    if not uid:
         return jsonify({'error': 'User ID is required'}), 400
 
-    msg_feed = db_connector.get_message_feed(userid)
+    msg_feed = db_connector.get_message_feed(uid)
     return jsonify(msg_feed)
 
 @api.route("/location", methods=['POST'])
 def update_location():
     data = request.get_json()
-    userid = data.get('userid')
+    uid = data.get('uid')
     location = data.get('location')
 
-    if not userid or not location:
+    if not uid or not location:
         return jsonify({'error': 'User ID and location are required'}), 400
 
-    db_connector.update_user_location(userid, location)
-    msg_feed = db_connector.get_message_feed(userid)
+    db_connector.update_user_location(uid, location)
+    msg_feed = db_connector.get_message_feed(uid)
     return jsonify(msg_feed)
 
 @api.route("/message", methods=['PUT'])
 def post_message():
     data = request.get_json()
-    userid = data.get('userid')
+    uid = data.get('uid')
     new_msg = data.get('new_msg')
 
-    if not userid or not new_msg:
+    if not uid or not new_msg:
         return jsonify({'error': 'User ID and message are required'}), 400
 
-    db_connector.add_message(userid, new_msg)
+    db_connector.add_message(uid, new_msg)
     return jsonify({'status': 'success'})
 
 @api.route("/like", methods=['PUT'])
 def like_message():
     data = request.get_json()
-    userid = data.get('userid')
+    uid = data.get('uid')
     msg_id = data.get('msg_id')
 
-    if not userid or not msg_id:
+    if not uid or not msg_id:
         return jsonify({'error': 'User ID and message ID are required'}), 400
 
-    db_connector.like_message(userid, msg_id)
+    db_connector.like_message(uid, msg_id)
     return jsonify({'status': 'success'})
 
 if __name__ == "__main__":
+    # Test SQL
+    connector = MySQLConnector()
+    for user in user_db:
+        connector.add_user(user)
+    user = connector.get_user(1)
+    print(user)
+
+    # Start API server
     api.run(host="0.0.0.0", port=5000)
