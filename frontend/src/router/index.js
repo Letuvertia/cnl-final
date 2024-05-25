@@ -25,9 +25,31 @@ const router = createRouter({
     {
       path: '/user',
       name: 'user',
-      component: UserView
+      component: UserView,
+      meta: { requiresAuth: true }
     },
   ]
 })
+
+const sessionTimeout = 30 * 60 * 1000; // 30 minutes
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!localStorage.getItem('authToken'); // Check if the token exists
+  const loginTime = localStorage.getItem('loginTime');
+  const currentTime = new Date().getTime();
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (isAuthenticated && loginTime && (currentTime - loginTime) < sessionTimeout) {
+      next();
+    } else {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('loginTime');
+      next('/login');
+    }
+  } else {
+    next();
+  }
+});
+
 
 export default router
