@@ -39,20 +39,18 @@ export default {
     },
     methods: {
         userLogin() {
-            this.login_check(this.user.email, this.user.password)
-            .then(() => {
-                this.$router.push("/");
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+            const email = this.user.email;
+            const password = this.user.password;
+            if (this.login_check(email, password)) {
+                localStorage.setItem('authToken', email); // Store token in localStorage
+                localStorage.setItem('loginTime', new Date().getTime()); // Store login time
+                this.$router.push("/user"); // Redirect to user page
+            } else {
+                alert("Invalid email or password.");
+            }
         },
         login_check(email, password) {
-            if (!(email in this.user_db) || user_db[email] !== password) {
-                return false;
-            } else {
-                return true;
-            }
+            return email in this.user_db && this.user_db[email] === password;
         },
     },
 };
