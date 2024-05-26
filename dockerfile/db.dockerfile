@@ -10,11 +10,12 @@ ENV TZ=Asia/Taipei \
 
 # Install FreeRadius
 RUN apt-get update && \
-    apt-get install -y tzdata freeradius freeradius-mysql && \
+    apt-get install -y tzdata freeradius freeradius-mysql mysql-server && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy Radius configuration files
-COPY db db
+COPY db/conf host_conf
+COPY db/db_entrypoint.sh db_entrypoint.sh
 
 # Create FreeRadius data directory (persistent volume recommended)
 RUN mkdir -p /var/run/radiusd/radiusd.sock
@@ -22,5 +23,8 @@ RUN mkdir -p /var/run/radiusd/radiusd.sock
 # Expose FreeRadius port
 EXPOSE 1812
 
+# Expose SQL port
+EXPOSE 3306
+
 # Start FreeRadius service
-CMD ["/bin/bash", "-c", "freeradius -s default"]
+ENTRYPOINT ["./db_entrypoint.sh"]

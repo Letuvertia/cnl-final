@@ -13,7 +13,9 @@ class MySQLConnector:
         # init
         self._connect(host, database, user, password)
         self.create_user_table()
+
         self.create_message_table()
+
 
     def __exit__(self):
         if self.connection:
@@ -38,9 +40,11 @@ class MySQLConnector:
                 time.sleep(2)
                 
     
+
     def _execute_query(self, sql_query, success_log="",param = None) -> None:
         try:
             self.cursor.execute(sql_query,param)
+
             self.connection.commit()
 
             if success_log:
@@ -153,3 +157,4 @@ class MySQLConnector:
     def like_msg(self,msgid,userid):
         query = f"UPDATE message SET msg_likes = msg_likes + 1 WHERE msg_id = {msgid} AND userid = {userid};"
         self._execute_query(query, f"Like message {msgid}")
+
