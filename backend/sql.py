@@ -13,6 +13,7 @@ class MySQLConnector:
         # init
         self._connect(host, database, user, password)
         self.create_user_table()
+        self.create_message_table()
 
     def __exit__(self):
         if self.connection:
@@ -53,15 +54,28 @@ class MySQLConnector:
             CREATE TABLE user (
                 userid serial PRIMARY KEY,
                 username varchar(255),
-                email varchar(255)
+                email varchar(255),
+                password varchar(255)
             );
             """
         self._execute_query(query, "Create table 'user'")
+
+    def create_message_table(self) -> None:
+        query = """
+            CREATE TABLE message (
+                msgid serial PRIMARY KEY,
+                userid integer,
+                msg varchar(255)[5],
+                thumns integer[5],
+                FOREIGN KEY (userid) REFERENCES user(userid)
+            );
+            """
+        self._execute_query(query, "Create table 'message'")
     
-    def add_user(self, user_data) -> None:
+    def add_user(self, user_data,password) -> None:
         query = f"""
-            INSERT INTO user (username, email)
-            VALUES ('{user_data["username"]}', '{user_data["email"]}');
+            INSERT INTO user (username, email,password)
+            VALUES ('{user_data["username"]}', '{user_data["email"]}','{password["password"]}');
         """
         self._execute_query(query, f"Insert {user_data}")
     
@@ -69,4 +83,35 @@ class MySQLConnector:
         query = f"SELECT * FROM user WHERE userid = {userid};"
         self._execute_query(query)
         return self.cursor.fetchall()
+    
+    def add_msg(self, msg_data,userid):
+        query = """
+        INSERT INTO message (userid, msg,0)
+        VALUES (%s, %s)
+        ON CONFLICT (userid) DO UPDATE
+        SET msg = CASE
+            WHEN array_length(message.msg, 1) < 5 THEN array_append(message.msg, %s)
+            ELSE array_append(array_remove(message.msg, message.msg[1]), %s)
+        END
+        RETURNING msgid;
+        """
+        self._execute_query(query, f"Insert {msg_data}")
 
+    def get_msg_all(self, userid):
+        query = f"SELECT * FROM message WHERE userid = {userid};"
+        self._execute_query(query)
+        return self.cursor.fetchall()
+    
+    def get_msg_new(self, userid):
+        query = f"SELECT * FROM message WHERE userid = {userid} AND array_length(msg,1) = 5;"
+        self._execute_query(query)
+        return self.cursor.fetchall()
+
+    def get_msg_all(self,user_id):
+        query = """
+        SELECT userid,msg
+        FROM message
+        WHERE userid = %s AND array_length(msg,1) BETWEEN 1 AND 5;
+        """
+        self._execute_query(query)
+        return self.cursor.fetchall()
