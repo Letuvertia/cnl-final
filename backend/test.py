@@ -7,7 +7,7 @@ class TestMySQLConnector(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # 在测试开始前运行一次，用于初始化
-        cls.db = MySQLConnector(host="localhost", database="locasync", user="admin", password="admin")
+        cls.db = MySQLConnector(host="db", database="locasync", user="admin", password="admin")
         cls.db.create_user_table()
         cls.db.create_message_table()
     

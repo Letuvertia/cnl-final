@@ -62,6 +62,14 @@ class MySQLConnector:
             """
         self._execute_query(query, "Create table 'user'")
 
+        # user_data = {
+        #     "username": "",
+        #     "password": "",
+        #     "email": "",
+        #     "location": "",
+        #     "userid":""
+        # }
+
     def create_message_table(self) -> None:
         query = """
             CREATE TABLE message (
@@ -75,9 +83,16 @@ class MySQLConnector:
             );
             """
         self._execute_query(query, "Create table 'message'")
-    
+        # msg_data = {
+        #     "userid": "",
+        #     "msg_id": "",
+        #     "msg_content": "",
+        #     "msg_likes": "",
+        #     "msg_location": ""
+        # }
+
     def add_user(self, user_data) -> None:
-        check_query = f"SELECT * FROM user WHERE username = '{user_data['id']}'"
+        check_query = f"SELECT * FROM user WHERE username = '{user_data['username']}' OR email = '{user_data['email']}' OR userid = '{user_data['userid']}'"
         self._execute_query(check_query)
 
         if self.cursor.fetchone():
@@ -99,6 +114,9 @@ class MySQLConnector:
         query = f"SELECT * FROM user WHERE userid = {userid};"
         self._execute_query(query,"get user by id")
         return self.cursor.fetchall()
+    
+    #def login 
+    #def register
     
     def add_msg(self,message_data):
         query = """
