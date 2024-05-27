@@ -56,12 +56,11 @@ class MySQLConnector:
     def create_user_table(self) -> None:
         query = """
             CREATE TABLE user (
-                userid serial PRIMARY KEY,
+                userid integer,
                 username varchar(255),
                 password varchar(255)
                 email varchar(255),
                 location varchar(255),
-                userid integer
             );
             """
         self._execute_query(query, "Create table 'user'")
@@ -77,7 +76,7 @@ class MySQLConnector:
     def create_message_table(self) -> None:
         query = """
             CREATE TABLE message (
-                msgid serial PRIMARY KEY,
+                msgid integer ,
                 userid integer,
                 msg_id integer,
                 msg_content varchar(255),
@@ -96,7 +95,7 @@ class MySQLConnector:
         # }
 
     def add_user(self, user_data) -> None:
-        check_query = f"SELECT * FROM user WHERE username = '{user_data['username']}' OR email = '{user_data['email']}' OR userid = '{user_data['userid']}'"
+        check_query = f"SELECT * FROM user WHERE email = '{user_data['email']}'; "
         self._execute_query(check_query)
 
         if self.cursor.fetchone():
