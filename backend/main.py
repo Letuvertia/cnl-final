@@ -4,44 +4,21 @@ from sql import MySQLConnector
 
 api = Flask(__name__)
 
-# Sample user data (only for testing)
-user_data = [
-  {
-    "userid": 1,
-    "username": "John Doe",
-    "password": "123456",
-    "email": "john.doe@example.com",
-    "location": "New York",
-  }
-  # {
-  #   "username": "Ann Doe",
-  #   "password": "56aaaaaa",
-  #   "email": "dududud@example.com",
-  #   "location": "taiwan",
-  #   "userid": 2
-  # }
-]
+from ex_db_data import user_data, message_data
 
-message_data = {
-        "userid": 1,
-        "msg_id": 1,
-        "msg_content": "Hello, world!",
-        "msg_likes": 0,
-        "msg_location": "Test Location"
-}
 
-@api.route("/userdata", methods=['POST'])
-def get_user_data():
-  """Returns user data in JSON format"""
-  uid = int(request.args.get('uid'))
+# @api.route("/userdata", methods=['POST'])
+# def get_user_data():
+#   """Returns user data in JSON format"""
+#   uid = int(request.args.get('uid'))
 
-  if not uid:
-    return jsonify({'error': 'User ID is required'}), 400
+#   if not uid:
+#     return jsonify({'error': 'User ID is required'}), 400
   
-  if uid in user_db.keys():
-    return jsonify(user_db[uid])
-  else:
-    return jsonify({'error': 'User not found'}), 404
+#   if uid in user_db.keys():
+#     return jsonify(user_db[uid])
+#   else:
+#     return jsonify({'error': 'User not found'}), 404
   
 
 import mysql.connector
@@ -53,15 +30,16 @@ def test_mysql_connector():
     db = MySQLConnector()
 
 
-    db.add_user(user_data)
+    db.add_user(user_data[0])
+    print(user_data[0]['email'])
     print("User added successfully.")
 
     # Test fetching user by email
-    user_login = db.get_user_login(user_data['email'])
+    user_login = db.get_user_login(user_data[0]['email'])
     print("User login details:", user_login)
 
     # Test fetching user by ID
-    user_by_id = db.get_user_id(user_data['userid'])
+    user_by_id = db.get_user_id(user_data[0]['userid'])
     print("User by ID details:", user_by_id)
 
 
@@ -69,15 +47,15 @@ def test_mysql_connector():
     print("Message added successfully.")
 
     # Test fetching the newest message
-    newest_msg = db.get_msg_new(user_data['userid'])
+    newest_msg = db.get_msg_new(user_data[0]['userid'])
     print("Newest message:", newest_msg)
 
     # Test fetching all messages
-    all_msgs = db.get_msg_all(user_data['userid'])
+    all_msgs = db.get_msg_all(user_data[0]['userid'])
     print("All messages:", all_msgs)
 
     # Test liking a message
-    db.like_msg(message_data['msg_id'], user_data['userid'])
+    db.like_msg(message_data['msg_id'], user_data[0]['userid'])
     print("Message liked successfully.")
 
 if __name__ == "__main__":

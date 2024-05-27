@@ -55,34 +55,36 @@ class MySQLConnector:
     
     def create_user_table(self) -> None:
         query = """
-            CREATE TABLE user (
+            CREATE TABLE IF NOT EXISTS user (
                 userid integer,
                 username varchar(255),
-                password varchar(255)
-                email varchar(255),
-                location varchar(255),
+                password varchar(255),
+                email nvarchar(255) ,
+                location_longtitude FLOAT,
+                location_latitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'user'")
 
         # user_data = {
+        #     "userid": "",
         #     "username": "",
         #     "password": "",
         #     "email": "",
-        #     "location": "",
-        #     "userid":""
+        #     "location_longtitude": "",
+        #     "location_latitude": ""
         # }
 
     def create_message_table(self) -> None:
         query = """
-            CREATE TABLE message (
+            CREATE TABLE IF NOT EXISTS message (
                 msgid integer ,
                 userid integer,
                 msg_id integer,
                 msg_content varchar(255),
                 msg_likes integer,
-                msg_location varchar(255),
-                FOREIGN KEY (userid) REFERENCES user(userid)
+                msg_location_longtitude FLOAT,
+                msg_location_latitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'message'")
@@ -94,16 +96,20 @@ class MySQLConnector:
         #     "msg_location": ""
         # }
 
-    def add_user(self, user_data) -> None:
-        check_query = f"SELECT * FROM user WHERE email = '{user_data['email']}'; "
-        self._execute_query(check_query)
+    # def check_user_exit(self, email):
+    #     query = f"SELECT * FROM user WHERE email = {email};"
+    #     self._execute_query(query,"get user by email")
+    #     return self.cursor.fetchall()
 
-        if self.cursor.fetchone():
-            raise ValueError(f"User {user_data['id']} already exists")
-        
+    def add_user(self, user_data) -> None:
         query = f"""
-            INSERT INTO user (username,password, email,location,userid)
-            VALUES ('{user_data["username"]}','{user_data["password"]}', '{user_data["email"]}', '{user_data["location"]}','{user_data["userid"]}');
+            INSERT INTO user (userid,username,password, email,location_longtitude,location_latitude)
+            VALUES ({user_data['userid']},
+            {user_data['username']},
+            {user_data['password']},
+            {user_data['email']},
+            {user_data['location_longtitude']},
+            {user_data['location_latitude']});
         """
         self._execute_query(query, f"Insert {user_data}")
         
@@ -139,19 +145,19 @@ class MySQLConnector:
         self._execute_query(query)
         return self.cursor.fetchall()
     
-    # def show_msg(self,latitude,longitude,distance_km):
-    #     query = """
-    #     SELECT msg_id, msg_content, msg_likes, ST_AsText(msg_location) AS location, msg_user, userid
-    #     FROM messages
-    #     WHERE ST_DWithin(
-    #         msg_location,
-    #         ST_SetSRID(ST_MakePoint(%s, %s), 4326),
-    #         %s * 1000
-    #     );
-    #     """
-    #     params = (longitude, latitude, distance_km)
-    #     self._execute_query(query, "Select messages within distance", params)
-    #     return self.cursor.fetchall()
+    def show_msg(self,latitude,longitude,distance_km):
+        query = """
+        SELECT msg_id, msg_content, msg_likes, ST_AsText(msg_location) AS location, msg_user, userid
+        FROM messages
+        WHERE ST_DWithin(
+            msg_location,
+            ST_SetSRID(ST_MakePoint(%s, %s), 4326),
+            %s * 1000
+        );
+        """
+        params = (longitude, latitude, distance_km)
+        self._execute_query(query, "Select messages within distance", params)
+        return self.cursor.fetchall()
 
     def like_msg(self,msgid,userid):
         query = f"UPDATE message SET msg_likes = msg_likes + 1 WHERE msg_id = {msgid} AND userid = {userid};"
