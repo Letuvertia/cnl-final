@@ -96,31 +96,31 @@ class MySQLConnector:
         #     "msg_location": ""
         # }
 
-    # def check_user_exit(self, email):
-    #     query = f"SELECT * FROM user WHERE email = {email};"
-    #     self._execute_query(query,"get user by email")
-    #     return self.cursor.fetchall()
+    def check_user_exit(self, email):
+        query = f"SELECT * FROM user WHERE email = {email};"
+        self._execute_query(query,"get user by email")
+        return self.cursor.fetchall()
 
     def add_user(self, user_data) -> None:
         query = f"""
             INSERT INTO user (userid,username,password, email,location_longtitude,location_latitude)
-            VALUES ({user_data['userid']},
-            {user_data['username']},
-            {user_data['password']},
-            {user_data['email']},
-            {user_data['location_longtitude']},
-            {user_data['location_latitude']});
+            VALUES ('{user_data['userid']}',
+            '{user_data['username']}',
+            '{user_data['password']}',
+            '{user_data['email']}',
+            '{user_data['location_longtitude']}',
+            '{user_data['location_latitude']}');
         """
         self._execute_query(query, f"Insert {user_data}")
         
     
     def get_user_login(self, email):
-        query = f"SELECT * FROM user WHERE email = {email};"
+        query = f"SELECT * FROM user WHERE email = '{email}';"
         self._execute_query(query,"get user by email")
         return self.cursor.fetchall()
     
     def get_user_id(self,userid):
-        query = f"SELECT * FROM user WHERE userid = {userid};"
+        query = f"SELECT * FROM user WHERE userid = '{userid}';"
         self._execute_query(query,"get user by id")
         return self.cursor.fetchall()
     
@@ -128,12 +128,22 @@ class MySQLConnector:
     #def register
     
     def add_msg(self,message_data):
-        query = """
-            INSERT INTO message (userid, msg_id, msg_content, msg_likes, msg_location)
-            VALUES (%s,%s,%s,%s,%s);
+        query = f"""
+            INSERT INTO message (userid, msg_id, msg_content, msg_likes, msg_location_longtitude, msg_location_latitude)
+            VALUES ('{message_data["userid"]}',
+                  '{message_data["msg_id"]}',
+                  '{message_data["msg_content"]}',
+                  '{message_data["msg_likes"]}',
+                  '{message_data["msg_location_longtitude"]}',
+                  '{message_data["msg_location_latitude"]}');
         """
-        params = (message_data["userid"],message_data["msg_id"],message_data["msg_content"],message_data["msg_likes"],message_data["msg_location"])
-        self._execute_query(query, f"Insert {message_data}",params)
+        # params = (message_data["userid"],
+        #           message_data["msg_id"],
+        #           message_data["msg_content"],
+        #           message_data["msg_likes"],
+        #           message_data["msg_location_longtitude"],
+        #           message_data["msg_location_latitude"])
+        self._execute_query(query, f"Insert {message_data}")
     
     def get_msg_new(self,userid):
         query = f"SELECT * FROM message WHERE userid = {userid} ORDER BY msg_id DESC LIMIT 1;"
