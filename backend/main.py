@@ -63,7 +63,7 @@ def test_mysql_connector():
     print("Message liked successfully.")
 
     db.update_data_location(1,128.245,189.123)
-    db.get_new_location(1)
+    print(db.get_new_location(1))
 
     db.show_msg(user_data[0]['location_longitude'],user_data[0]['location_latitude'],1)
 
