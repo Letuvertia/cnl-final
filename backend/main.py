@@ -34,6 +34,10 @@ def test_mysql_connector():
     print(user_data[0]['email'])
     print("User added successfully.")
 
+    db.check_user_exit(user_data[0]['email'])
+    s = db.check_user_exit("iansu1220@gmail.com")
+    print(s)
+
     # Test fetching user by email
     user_login = db.get_user_login(user_data[0]['email'])
     print("User login details:", user_login)
@@ -42,7 +46,7 @@ def test_mysql_connector():
     user_by_id = db.get_user_id(user_data[0]['userid'])
     print("User by ID details:", user_by_id)
 
-
+    db.print_table_schema("message")
     db.add_msg(message_data)
     print("Message added successfully.")
 
@@ -57,6 +61,12 @@ def test_mysql_connector():
     # Test liking a message
     db.like_msg(message_data['msg_id'], user_data[0]['userid'])
     print("Message liked successfully.")
+
+    db.update_data_location(1,128.245,189.123)
+    db.get_new_location(1)
+
+    db.show_msg(user_data[0]['location_longitude'],user_data[0]['location_latitude'],1)
+
 
 if __name__ == "__main__":
     test_mysql_connector()
