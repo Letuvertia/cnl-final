@@ -5,12 +5,12 @@ BASE_URL="http://localhost:5000"
 
 # Test API 1: Register a new user (POST /register)
 echo "Testing POST @api.route('/register', methods=['POST'])"
-curl -s -X POST -H "Content-Type: application/json" -d '{"username":"newuser","password":"password123"}' "$BASE_URL/register"
+curl -s -X POST -H "Content-Type: application/json" -d '{"username":"newuser","password":"password123","email":"test@email.com"}' "$BASE_URL/register"
 echo -e "\n"
 
 # Test API 2: Authenticate a user (POST /login)
 echo "Testing POST @api.route('/login', methods=['POST'])"
-curl -s -X POST -H "Content-Type: application/json" -d '{"username":"john","password":"password123"}' "$BASE_URL/login"
+curl -s -X POST -H "Content-Type: application/json" -d '{"username":"newuser","password":"password123"}' "$BASE_URL/login"
 echo -e "\n"
 
 # Test API 3: Get list of users (GET /users)

@@ -6,33 +6,7 @@ api = Flask(__name__)
 
 from ex_db_data import user_data, message_data
 
-
-# @api.route("/userdata", methods=['POST'])
-# def get_user_data():
-#   """Returns user data in JSON format"""
-#   uid = int(request.args.get('uid'))
-
-#   if not uid:
-#     return jsonify({'error': 'User ID is required'}), 400
-  
-#   if uid in user_db.keys():
-#     return jsonify(user_db[uid])
-#   else:
-#     return jsonify({'error': 'User not found'}), 404
-
 db_connector = MySQLConnector()
-
-# Sample user data (only for testing)
-user_db = [
-  {
-    "username": "John Doe",
-    "email": "john.doe@example.com",
-  },
-  {
-    "username": "Ann Doe",
-    "email": "ann.doe@example.com",
-  }
-]
 
 @api.route("/register", methods=['POST'])
 def register():
@@ -47,7 +21,7 @@ def register():
     if db_connector.get_user_login(email):
         return jsonify({'register_status': 'fail', 'error': 'Email already registered'}), 400
 
-    db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_longitude': '-', 'location_latitude': '-'})
+    db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_longitude': 0.0, 'location_latitude': 0.0})
     return jsonify({'register_status': 'success'}), 201
 
 @api.route("/login", methods=['POST'])
@@ -60,6 +34,7 @@ def login(): #notdone (-changeloc)
         return jsonify({'auth_status': 'fail', 'error': 'Username and password are required'}), 400
 
     user = db_connector.get_user_login(username)
+    print(user)
     
     if user and user[0][2] == password:  # Password verification (hashing should be implemented in real applications)
         uid = user[0][0]
@@ -194,14 +169,7 @@ def test_mysql_connector():
 
 
 if __name__ == "__main__":
-    test_mysql_connector()
-
-# if __name__ == "__main__":  
-#     # test sql
-#     connector = MySQLConnector()
-#     connector.add_user(user_db[0])
-#     user = connector.get_user(1)
-#     print(user)
+    # test_mysql_connector()
 
     # start api server
     api.run(host="0.0.0.0", port=5000)
