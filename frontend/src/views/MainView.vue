@@ -39,7 +39,10 @@ export default {
   methods: {
     handleLocationUpdate(location) { // update location and send to backend
       this.userLocation = location;
-      return JSON.stringify({ userid: this.userid, location: this.userLocation})
+      const msg_location_json = JSON.stringify({ userid: this.userid, location: this.userLocation});
+      // send location message to backend
+      // send request for msg_feed to backend
+      // this.msgFeedsToBubbles(msg_feed_json);
     },
     newMessage(text) { // send entered message to backend
       const msg_put = {
@@ -50,10 +53,10 @@ export default {
             msg_user: this.username
         }
       };
-      // send new msg to backend
-      // send a request for msg_feed to backend
       const msg_put_json = JSON.stringify(msg_put);
-      return msg_put_json;
+      // send new message to backend
+      // send a request for msg_feed to backend
+      // this.msgFeedsToBubbles(msg_feed_json);
     },
     msgFeedsToBubbles(msg_feed_json) { // convert msg_feed from backend to local bubbles
       const msg_feed = JSON.parse(msg_feed_json);
@@ -91,9 +94,10 @@ export default {
         msg_id: bubble.id,
         liked: !bubble.liked
       }
+      const msg_like_json = JSON.stringify(like_msg);
       // send like message to backend
       // send request for msg_feed to backend
-      return JSON.stringify(like_msg);
+      // this.msgFeedsToBubbles(msg_feed_json);
     },
     generateRandomProperties() {
       for (let i = 0; i < 100; i++) {
