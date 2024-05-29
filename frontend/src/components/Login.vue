@@ -3,7 +3,7 @@
         <form @submit.prevent="userLogin">
             <h1>Login</h1>
             <div class="form-group">
-                <label>Email</label>
+                <label>Email &nbsp</label>
                 <input
                     type="email"
                     class="form-control form-control-lg"
@@ -11,7 +11,7 @@
                 />
             </div>
             <div class="form-group">
-                <label>Password</label>
+                <label>Password &nbsp</label>
                 <input
                     type="password"
                     class="form-control form-control-lg"
