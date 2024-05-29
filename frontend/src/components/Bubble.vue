@@ -8,7 +8,11 @@
 <script>
 export default {
   props: {
-    text: {
+    id: {
+      type: Number,
+      required: true
+    },
+    content: {
       type: String,
       required: true
     },
@@ -16,21 +20,29 @@ export default {
       type: Number,
       required: true
     },
+    location: {
+      type: Object,
+      required: true
+    },
+    user: {
+      type: String,
+      required: true
+    },
     liked: {
       type: Boolean,
-      default: false
+      required: true
     },
     top: {
       type: Number,
-      required: true
+      default: 0
     },
     left: {
       type: Number,
-      required: true
+      default: 0
     },
     color: {
       type: String,
-      required: true
+      default: 0
     }
   },
   computed: {

@@ -137,14 +137,16 @@ Return:
                 "msg_content": "",
                 "msg_likes": "",
                 "msg_location": "",
-                "msg_user": ""
+                "msg_user": "",
+                "msg_liked": ""
             },
             {
                 "msg_id": "",
                 "msg_content": "",
                 "msg_likes": "",
                 "msg_location": "",
-                "msg_user": ""
+                "msg_user": "",
+                "msg_liked": ""
             },
             ...
         ]
@@ -182,14 +184,16 @@ Return:
         "msg_content": "",
         "msg_likes": "",
         "msg_location": "",
-        "msg_user": ""
+        "msg_user": "",
+        "msg_liked": ""
     },
     {
         "msg_id": "",
         "msg_content": "",
         "msg_likes": "",
         "msg_location": "",
-        "msg_user": ""
+        "msg_user": "",
+        "msg_liked": ""
     },
     ...
 ]
@@ -251,5 +255,6 @@ Arg:
 {
     "userid": "",
     "msg_id": "",
+    "msg_liked": ""
 }
 ```

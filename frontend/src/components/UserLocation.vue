@@ -1,7 +1,5 @@
 <template>
-  <div class="location-display">
-    Latitude: {{ userLocation.latitude }}, Longitude: {{ userLocation.longitude }}
-  </div>
+  <!-- No content to display -->
 </template>
 
 <script>
@@ -22,7 +20,8 @@ export default {
     updateLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
-      } else {
+      }
+      else {
         console.log("Geolocation is not supported by this browser.");
       }
     },
@@ -41,13 +40,5 @@ export default {
 </script>
 
 <style scoped>
-.location-display {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
+/* No styles needed */
 </style>

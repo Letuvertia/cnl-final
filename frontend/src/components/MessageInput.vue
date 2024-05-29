@@ -1,7 +1,7 @@
 <template>
   <div class="input-container">
-    <input v-model="inputText" @keydown.enter="emitBubble" type="text" placeholder="Enter text here" />
-    <button @click="emitBubble">Enter</button>
+    <input v-model="inputText" @keydown.enter="emitMessage" type="text" placeholder="Enter text here" />
+    <button @click="emitMessage">Enter</button>
   </div>
 </template>
 
@@ -13,9 +13,9 @@ export default {
     };
   },
   methods: {
-    emitBubble() {
+    emitMessage() {
       if (this.inputText.trim() !== '') {
-        this.$emit('new-bubble', this.inputText);
+        this.$emit('new-message', this.inputText);
         this.inputText = '';
       }
     }
