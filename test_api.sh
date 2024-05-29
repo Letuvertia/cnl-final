@@ -25,7 +25,7 @@ echo -e "\n"
 
 # Test API 5: Update location (POST /location)
 echo "Testing POST @api.route('/location', methods=['POST'])"
-curl -s -X POST -H "Content-Type: application/json" -d '{"userid":"1","location":"New York"}' "$BASE_URL/location"
+curl -s -X POST -H "Content-Type: application/json" -d '{"userid":"1","location_longitude": 121.123,"location_latitude": 25.123}' "$BASE_URL/location"
 echo -e "\n"
 
 # Test API 6: Post a new message (PUT /message)
