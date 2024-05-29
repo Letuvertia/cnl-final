@@ -1,51 +1,69 @@
 <template>
-  <div id="app">
-    <MenuBar @navigate="handleNavigation" />
-    <UserLocation @location-updated="updateUserLocation" />
-    <router-view :textHistory="textHistory" @update-history="updateTextHistory" :userLocation="userLocation" />
-    <UserBubble />
+  <div class="main-view">
+    <MessageInput @new-bubble="addBubble" />
+    <Bubble 
+      v-for="(bubble, index) in bubbles" 
+      :key="index" 
+      :text="bubble.text" 
+      :likes="bubble.likes" 
+      :liked="bubble.liked"
+      :top="bubble.top"
+      :left="bubble.left"
+      :color="bubble.color"
+      @toggle-like="toggleLike(index)"
+    />
   </div>
 </template>
 
 <script>
-import MenuBar from '../components/MenuBar.vue';
-import UserLocation from '../components/UserLocation.vue';
-import UserBubble from '../components/UserBubble.vue';
+import MessageInput from '../components/MessageInput.vue';
+import Bubble from '../components/Bubble.vue';
 
 export default {
   components: {
-    UserLocation,
-    UserBubble,
-    MenuBar,
+    MessageInput,
+    Bubble
   },
   data() {
     return {
-      textHistory: [], // Store the history of texts
-      userLocation: { latitude: 0, longitude: 0 } // Store the user's location
+      bubbles: []
     };
   },
   methods: {
-    handleNavigation(page) {
-      if (page === 'UserPage') {
-        this.$router.push({ name: 'UserPage', params: { textHistory: this.textHistory } });
-      }
-      else if (page === 'LoginPage') {
-        // TODO
-      }
-      else if (page === 'Main') {
-        this.$router.push({ name: 'Main' });
-      }
+    addBubble(text) {
+      const t = Math.random() * (window.innerHeight - 200) + 50;
+      const l = Math.random() * (window.innerWidth - 150) + 25;
+      const c = this.generateRandomColor()
+      this.bubbles.push({ text, likes: 0, liked: false, top: t, left: l, color: c});
     },
-    updateTextHistory(newText) {
-      this.textHistory.unshift(newText);
+    generateRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     },
-    updateUserLocation(location) {
-      this.userLocation = location;
+    toggleLike(index) {
+      const bubble = this.bubbles[index];
+      bubble.liked = !bubble.liked;
+      if (bubble.liked) {
+        bubble.likes++;
+        bubble.size
+      }
+      else {
+        bubble.likes--;
+      }
     }
   }
 };
 </script>
 
-<style>
-/* Your other styles */
+<style scoped>
+.main-view {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 </style>
