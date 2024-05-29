@@ -65,8 +65,54 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert {user_data}")
     
+<<<<<<< Updated upstream
     def get_user(self, userid):
         query = f"SELECT * FROM user WHERE userid = {userid};"
+=======
+    def get_user_login(self, email):
+        query = f"SELECT * FROM user WHERE email = '{email}';"
+        self._execute_query(query,"get user by email")
+        return self.cursor.fetchall()
+    
+    def get_user_id(self,userid):
+        userid = int(userid)
+        query = f"SELECT * FROM user WHERE userid = '{userid}';"
+        self._execute_query(query,"get user by id")
+        return self.cursor.fetchall()
+    
+    #def login 
+    #def register
+
+    #for testing
+    def print_table_schema(self, table_name):
+        query = f"SHOW COLUMNS FROM {table_name}"
+        self.cursor.execute(query)
+        columns = self.cursor.fetchall()
+        print(f"Schema for table '{table_name}':")
+        for column in columns:
+            print(column)
+    
+    def add_msg(self,message_data):
+        query = f"""
+            INSERT INTO message (userid, msg_id, msg_content, msg_likes, msg_location_longitude, msg_location_latitude)
+            VALUES ('{message_data['userid']}',
+                  '{message_data['msg_id']}',
+                  '{message_data['msg_content']}',
+                  '{message_data['msg_likes']}',
+                  '{message_data['msg_location_longitude']}',
+                  '{message_data['msg_location_latitude']}');
+        """
+        # params = (message_data["userid"],
+        #           message_data["msg_id"],
+        #           message_data["msg_content"],
+        #           message_data["msg_likes"],
+        #           message_data["msg_location_longitude"],
+        #           message_data["msg_location_latitude"])
+        self._execute_query(query, f"Insert {message_data}")
+    
+    def get_msg_new(self,userid):
+        query = f"SELECT * FROM message WHERE userid = {userid} ORDER BY msg_id DESC LIMIT 1;"
+>>>>>>> Stashed changes
         self._execute_query(query)
         return self.cursor.fetchall()
 
