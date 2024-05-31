@@ -24,8 +24,9 @@ curl -s -X GET "$BASE_URL/feed?userid=1"
 echo -e "\n"
 
 # Test API 5: Update location (POST /location)
+#original location format error: change "new york " to integer pair
 echo "Testing POST @api.route('/location', methods=['POST'])"
-curl -s -X POST -H "Content-Type: application/json" -d '{"userid":"1","location":"New York"}' "$BASE_URL/location"
+curl -s -X POST -H "Content-Type: application/json" -d '{"userid":"1","longitude":"125.34","latitude":"25.4"}' "$BASE_URL/location"
 echo -e "\n"
 
 # Test API 6: Post a new message (PUT /message)

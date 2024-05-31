@@ -103,10 +103,13 @@ def update_location(): #notdone(-changeloc)
     data = request.get_json()
     uid = data.get('userid')
 
+    longitude = data.get('longitude')
+    latitude = data.get('latitude')
+
     if not uid:
         return jsonify({'error': 'User ID and location are required'}), 400
     location = db_connector.get_new_location(uid)
-    db_connector.update_data_location(uid, location[0], location[1])
+    db_connector.update_data_location(uid, longitude, latitude)
     
     #as test_api.sh show,right now have no message to show
     #msg_feed = db_connector.get_message_all(uid)
@@ -121,13 +124,17 @@ def post_message():
     if not uid or not new_msg:
         return jsonify({'error': 'User ID and message are required'}), 400
 
-    #new_msg['userid'] = uid
-    new_msg['msg_id'] = 2
-    new_msg['msg_likes'] = 0  
-    new_msg['msg_location_longitude'] = 125.3
-    new_msg['msg_location_latitude'] = 25.3
+    #make json format fit add_msg
+    data['userid'] = uid
+    data['msg_id'] = 2
+    data['msg_content'] = new_msg
+    data['msg_likes'] = 0  
 
-    db_connector.add_msg(new_msg)
+    #here need to get location from frontend
+    data['msg_location_longitude'] = 125.3
+    data['msg_location_latitude'] = 25.3
+
+    db_connector.add_msg(data)
     return jsonify({'status': 'success'})
 
 @api.route("/like", methods=['PUT'])
