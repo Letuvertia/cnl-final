@@ -20,7 +20,7 @@ def register():
 
     check = db_connector.check_user_exit(username)
 
-    if check == -1:
+    if check != -1:
         return jsonify({'register_status': 'fail', 'error': 'Username already registered'}), 400
     # if db_connector.get_user_login(email):
     #     return jsonify({'register_status': 'fail', 'error': 'Email already registered'}), 400
