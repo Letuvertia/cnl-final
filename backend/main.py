@@ -6,23 +6,6 @@ api = Flask(__name__)
 
 from ex_db_data import user_data, message_data
 
-<<<<<<< HEAD
-
-# @api.route("/userdata", methods=['POST'])
-# def get_user_data():
-#   """Returns user data in JSON format"""
-#   uid = int(request.args.get('uid'))
-
-#   if not uid:
-#     return jsonify({'error': 'User ID is required'}), 400
-  
-#   if uid in user_db.keys():
-#     return jsonify(user_db[uid])
-#   else:
-#     return jsonify({'error': 'User not found'}), 404
-  
-
-=======
 db_connector = MySQLConnector()
 
 @api.route("/register", methods=['POST'])
@@ -168,22 +151,15 @@ def like_message():
     db_connector.like_msg(msg_id, uid)
     return jsonify({'status': 'success'})  
 
->>>>>>> origin/main
 import mysql.connector
 from mysql.connector import Error
 
 
 def test_mysql_connector():
     # Create a MySQLConnector instance
-<<<<<<< HEAD
-    db = MySQLConnector()
-
-
-=======
     
     db = MySQLConnector()
 
->>>>>>> origin/main
     db.add_user(user_data[0])
     print(user_data[0]['email'])
     print("User added successfully.")
@@ -223,18 +199,7 @@ def test_mysql_connector():
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    test_mysql_connector()
-
-# if __name__ == "__main__":  
-#     # test sql
-#     connector = MySQLConnector()
-#     connector.add_user(user_db[0])
-#     user = connector.get_user(1)
-#     print(user)
-=======
     # test_mysql_connector()
->>>>>>> origin/main
 
     # start api server
     api.run(host="0.0.0.0", port=5000)
