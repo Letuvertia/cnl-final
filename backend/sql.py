@@ -67,8 +67,8 @@ class MySQLConnector:
                 username varchar(255),
                 password varchar(255),
                 email nvarchar(255) ,
-                location_longitude FLOAT,
-                location_latitude FLOAT
+                location_latitude FLOAT,
+                location_longitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'user'")
@@ -80,8 +80,8 @@ class MySQLConnector:
                 msg_id integer,
                 msg_content varchar(255),
                 msg_likes integer,
-                msg_location_longitude FLOAT,
-                msg_location_latitude FLOAT
+                msg_location_latitude FLOAT,
+                msg_location_longitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'message'")
@@ -91,7 +91,7 @@ class MySQLConnector:
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         if result:
-            return result[0]
+            return result[0] #userid
         else:
             return -1
 
