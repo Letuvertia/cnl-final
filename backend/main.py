@@ -33,6 +33,8 @@ def login(): #notdone (-changeloc)
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
+    longitude = data.get('longitude')
+    latitude = data.get('latitude')
     
     if not username or not password:
         return jsonify({'auth_status': 'fail', 'error': 'Username and password are required'}), 400
@@ -44,8 +46,8 @@ def login(): #notdone (-changeloc)
         uid = user[0][0]
 
         #this two have to wait unitil we get location information from frontend
-        # location = db_connector.get_new_location(uid)
-        #db_connector.update_data_location(uid, location[0], location[1])
+        location = db_connector.get_new_location(uid)
+        db_connector.update_data_location(uid, longitude, latitude)
 
         user_ = db_connector.get_user_id(uid)
         msg_feed = db_connector.get_msg_all(uid)

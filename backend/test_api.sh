@@ -10,7 +10,7 @@ echo -e "\n"
 
 # Test API 2: Authenticate a user (POST /login)
 echo "Testing POST @api.route('/login', methods=['POST'])"
-curl -s -X POST -H "Content-Type: application/json" -d '{"username":"newuser","password":"password123"}' "$BASE_URL/login"
+curl -s -X POST -H "Content-Type: application/json" -d '{"username":"newuser","password":"password123","longititude":"125.43","latitude":25.6}' "$BASE_URL/login"
 echo -e "\n"
 
 # Test API 3: Get list of users (GET /users)
