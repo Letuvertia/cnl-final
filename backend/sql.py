@@ -17,7 +17,10 @@ class MySQLConnector:
 
         self.create_user_table()
         self.create_message_table()
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 
     def __exit__(self):
         if self.connection:
@@ -40,10 +43,15 @@ class MySQLConnector:
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
                 time.sleep(2)
+<<<<<<< HEAD
                 
     
 
     def _execute_query(self, sql_query, success_log="",param = None) -> None:
+=======
+
+    def _execute_query(self, sql_query, success_log="", param = None) -> None:
+>>>>>>> origin/main
         try:
             self.cursor.execute(sql_query,param)
 
@@ -66,7 +74,11 @@ class MySQLConnector:
     def create_user_table(self) -> None:
         query = """
             CREATE TABLE IF NOT EXISTS user (
+<<<<<<< HEAD
                 userid integer,
+=======
+                userid serial PRIMARY KEY,
+>>>>>>> origin/main
                 username varchar(255),
                 password varchar(255),
                 email nvarchar(255) ,
@@ -76,6 +88,7 @@ class MySQLConnector:
             """
         self._execute_query(query, "Create table 'user'")
 
+<<<<<<< HEAD
         # user_data = {
         #     "userid": "",
         #     "username": "",
@@ -85,6 +98,8 @@ class MySQLConnector:
         #     "location_latitude": ""
         # }
 
+=======
+>>>>>>> origin/main
     def create_message_table(self) -> None:
         query = """
             CREATE TABLE IF NOT EXISTS message (
@@ -98,8 +113,13 @@ class MySQLConnector:
             """
         self._execute_query(query, "Create table 'message'")
 
+<<<<<<< HEAD
     def check_user_exit(self, email):
         query = f"SELECT * FROM user WHERE email = '{email}';"
+=======
+    def check_user_exit(self, username):
+        query = f"SELECT * FROM user WHERE username = '{username}';"
+>>>>>>> origin/main
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         if result:
@@ -109,8 +129,13 @@ class MySQLConnector:
 
     def add_user(self, user_data) -> None:
         query = f"""
+<<<<<<< HEAD
             INSERT INTO user (userid,username,password, email,location_longitude,location_latitude)
             VALUES ('{user_data['userid']}',
+=======
+            INSERT INTO user (username, password, email, location_longitude,location_latitude)
+            VALUES (
+>>>>>>> origin/main
             '{user_data['username']}',
             '{user_data['password']}',
             '{user_data['email']}',
@@ -119,10 +144,21 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert {user_data}")
         
+<<<<<<< HEAD
     
     def get_user_login(self, email):
         query = f"SELECT * FROM user WHERE email = '{email}';"
         self._execute_query(query,"get user by email")
+=======
+    def get_all_user(self):
+        query = "SELECT * FROM user;"
+        self._execute_query(query,"get all user")
+        return self.cursor.fetchall()
+    
+    def get_user_login(self, username):
+        query = f"SELECT * FROM user WHERE username = '{username}';"
+        self._execute_query(query,"get user by username")
+>>>>>>> origin/main
         return self.cursor.fetchall()
     
     def get_user_id(self,userid):
@@ -165,11 +201,19 @@ class MySQLConnector:
         self._execute_query(query)
         return self.cursor.fetchall()
     
+<<<<<<< HEAD
+=======
+    #to show the user's all message history
+>>>>>>> origin/main
     def get_msg_all(self,userid):
         query = f"SELECT * FROM message WHERE userid = {userid}"
         self._execute_query(query)
         return self.cursor.fetchall()
     
+<<<<<<< HEAD
+=======
+    #to show the message around the user
+>>>>>>> origin/main
     def show_msg(self,latitude,longitude,distance_km):
         query = f"""
             SELECT *, 
@@ -184,6 +228,7 @@ class MySQLConnector:
         return self.cursor.fetchall()
     
 
+<<<<<<< HEAD
     def like_msg(self,msgid,userid):
         query = f"UPDATE message SET msg_likes = msg_likes + 1 WHERE msg_id = {msgid} AND userid = {userid};"
         self._execute_query(query, f"Like message {msgid}")
@@ -193,6 +238,17 @@ class MySQLConnector:
         self._execute_query(query, f"Update user location {userid}")
     
     def get_new_location(self,userid):
+=======
+    def like_msg(self, msgid, userid):
+        query = f"UPDATE message SET msg_likes = msg_likes + 1 WHERE msg_id = {msgid} AND userid = {userid};"
+        self._execute_query(query, f"Like message {msgid}")
+
+    def update_data_location(self, userid, latitude, longitude):
+        query = f"UPDATE user SET location_longitude = {longitude}, location_latitude = {latitude} WHERE userid = {userid};"
+        self._execute_query(query, f"Update user location {userid}")
+    
+    def get_new_location(self, userid):
+>>>>>>> origin/main
         query = f"SELECT location_longitude, location_latitude FROM user WHERE userid = {userid};"
         self._execute_query(query, f"Get user location {userid}")
         return self.cursor.fetchall()
