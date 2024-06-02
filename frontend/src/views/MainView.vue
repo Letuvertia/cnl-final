@@ -22,6 +22,8 @@ import Bubble from '../components/Bubble.vue';
 import UserLocation from '../components/UserLocation.vue';
 import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:5000';
+
 export default {
   components: {
     MessageInput,
@@ -42,13 +44,24 @@ export default {
     handleLocationUpdate(location) { // update location and send to backend
       this.userLocation = location;
       const msg_location_json = JSON.stringify({ userid: this.userid, location: this.userLocation});
-      axios.post('http://localhost:5000/location', msg_location_json);
-      axios.get('http://localhost:5000/feed,', JSON.stringify({ userid : this.userid }))
-        .then(
-          response => {
-            this.msg_feed = JSON.parse(response.data.msg_feed);
-          }
-        )
+      axios.post('/api/location', msg_location_json)
+      .then()
+      .catch(
+        error => {
+          console.error('Error updating location:', error);
+        }
+      );
+      axios.get('/api/feed,', JSON.stringify({ userid : this.userid }))
+      .then(
+        response => {
+          this.msg_feed = JSON.parse(response.data.msg_feed);
+        }
+      )
+      .catch(
+        error => {
+          console.error('Error updating msg_feed:', error);
+        }
+      );
       // send location message to backend
       // send request for msg_feed to backend
       this.msgFeedsToBubbles();
@@ -63,14 +76,24 @@ export default {
         }
       };
       const msg_put_json = JSON.stringify(msg_put);
-      axios.put('http://localhost:5000/message', msg_put_json);
-      axios.get('http://localhost:5000/feed,', JSON.stringify({ userid : this.userid }))
-        .then(
-          response => {
-            this.msg_feed = JSON.parse(response.data.msg_feed);
-            console.log(this.msg_feed);
-          }
-        )
+      axios.put('/api/message', msg_put_json)
+      .then()
+      .catch(
+        error => {
+          console.error('Error updating location:', error);
+        }
+      );
+      axios.get('/api/feed,', JSON.stringify({ userid : this.userid }))
+      .then(
+        response => {
+          this.msg_feed = JSON.parse(response.data.msg_feed);
+        }
+      )
+      .catch(
+        error => {
+          console.error('Error updating msg_feed:', error);
+        }
+      );
       // send new message to backend
       // send a request for msg_feed to backend
       this.msgFeedsToBubbles();
@@ -111,13 +134,24 @@ export default {
         liked: !bubble.liked
       }
       const msg_like_json = JSON.stringify(like_msg);
-      axios.put('http://localhost:5000/like', msg_like_json);
-      axios.get('http://localhost:5000/get_feed,', JSON.stringify({ userid : this.userid }))
-        .then(
-          response => {
-            this.msg_feed = JSON.parse(response.data.msg_feed);
-          }
-        )
+      axios.put('/api/like', msg_like_json)
+      .then()
+      .catch(
+        error => {
+          console.error('Error updating location:', error);
+        }
+      );
+      axios.get('/api/feed,', JSON.stringify({ userid : this.userid }))
+      .then(
+        response => {
+          this.msg_feed = JSON.parse(response.data.msg_feed);
+        }
+      )
+      .catch(
+        error => {
+          console.error('Error updating msg_feed:', error);
+        }
+      );
       // send like message to backend
       // send request for msg_feed to backend
       this.msgFeedsToBubbles();
