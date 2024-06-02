@@ -151,6 +151,18 @@ class MySQLConnector:
         #           message_data["msg_location_longitude"],
         #           message_data["msg_location_latitude"])
         self._execute_query(query, f"Insert {message_data}")
+
+    def get_max_msgid(self,userid):
+        query = f"SELECT MAX(msg_id) FROM message WHERE userid = '{userid}';"
+        self._execute_query(query)
+        max_msgid = self.cursor.fetchall()
+
+        print(max_msgid)
+        if max_msgid[0] == (None,):
+            return 0
+        else:
+            return max_msgid[0]
+
     
     def get_msg_new(self,userid):
         query = f"SELECT * FROM message WHERE userid = {userid} ORDER BY msg_id DESC LIMIT 1;"

@@ -123,12 +123,14 @@ def post_message():
     uid = data.get('userid')
     new_msg = data.get('new_msg')
 
+    max_msg_id = db_connector.get_max_msgid(uid)
+
     if not uid or not new_msg:
         return jsonify({'error': 'User ID and message are required'}), 400
 
     #make json format fit add_msg
     data['userid'] = uid
-    data['msg_id'] = 2
+    data['msg_id'] = max_msg_id + (1,)
     data['msg_content'] = new_msg
     data['msg_likes'] = 0  
 
