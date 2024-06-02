@@ -111,6 +111,12 @@ msg_location_latitude FLOAT,
 msg_location_longitude FLOAT
 ```
 
+### `likes` table
+```sql
+userid integer,
+msg_id integer
+```
+
 ## API spec
 ### `/register` (POST)
 Register a new user account.
@@ -176,7 +182,7 @@ Return:
         "msg_likes": "",
         "msg_content": "",
         "msg_location_latitude": "",
-        "msg_location_longtitude": "",
+        "msg_location_longitude": "",
         "msg_liked": true
     },
     {
@@ -185,7 +191,7 @@ Return:
         "msg_likes": "",
         "msg_content": "",
         "msg_location_latitude": "",
-        "msg_location_longtitude": "",
+        "msg_location_longitude": "",
         "msg_liked": false
     },
     ...
@@ -209,7 +215,7 @@ Return:
         "msg_likes": "",
         "msg_content": "",
         "msg_location_latitude": "",
-        "msg_location_longtitude": "",
+        "msg_location_longitude": "",
         "msg_liked": true
     },
     {
@@ -218,7 +224,7 @@ Return:
         "msg_likes": "",
         "msg_content": "",
         "msg_location_latitude": "",
-        "msg_location_longtitude": "",
+        "msg_location_longitude": "",
         "msg_liked": false
     },
     ...
@@ -237,7 +243,7 @@ Arg:
         "msg_userid": "",
         "msg_content": "",
         "msg_location_latitude": "",
-        "msg_location_longtitude": ""
+        "msg_location_longitude": ""
     }
 }
 ```
@@ -275,7 +281,7 @@ Return:
             "msg_likes": "",
             "msg_content": "",
             "msg_location_latitude": "",
-            "msg_location_longtitude": "",
+            "msg_location_longitude": "",
             "msg_liked": true
         },
         {
@@ -284,7 +290,7 @@ Return:
             "msg_likes": "",
             "msg_content": "",
             "msg_location_latitude": "",
-            "msg_location_longtitude": "",
+            "msg_location_longitude": "",
             "msg_liked": false
         },
         ...
