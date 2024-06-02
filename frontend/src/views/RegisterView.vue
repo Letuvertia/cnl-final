@@ -60,12 +60,11 @@ export default {
     methods: {
         async userRegistration() {
             try {
-                const response = await axios.post('/register', {
+                const response = await axios.post('/api/register', {
                     username: this.user.username,
+                    password: this.user.password,
                     email: this.user.email,
-                    password: this.user.password
                 });
-
                 if (response.data.register_status === 'success') {
                     this.$router.push('/login');
                 } else {
