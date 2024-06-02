@@ -5,7 +5,7 @@ from sql import MySQLConnector
 # api server
 api = Flask(__name__)
 db_connector = MySQLConnector()
-# db_connector.clear_database()
+# db_connector.clear_database() # run this line to empty the database
 
 @api.route("/register", methods=['POST'])
 def register():
@@ -109,7 +109,6 @@ def add_message():
                          msg_content=new_msg.get('msg_content'),
                          msg_location_latitude=new_msg.get('msg_location_latitude'),
                          msg_location_longitude=new_msg.get('msg_location_longitude'))
-
     return "", 200
 
 
