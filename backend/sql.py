@@ -101,6 +101,29 @@ class MySQLConnector:
         self._truncate_table("user")
         self._truncate_table("message")
         self._truncate_table("likes")
+    
+    @staticmethod
+    def _to_user_dict(user:tuple) -> dict:
+        return {
+            "userid": user[0],
+            "username": user[1],
+            "password": user[2],
+            "email": user[3],
+            "location_latitude": user[4],
+            "location_longitude": user[5]
+        }
+
+    def _to_msg_dict(self, msg:tuple, userid:int) -> dict:
+        msg_liked = self.is_liked_by_user(msg_id=msg[0], userid=userid)
+        return {
+            "msg_id": msg[0],
+            "msg_userid": msg[1],
+            "msg_likes": msg[2],
+            "msg_content": msg[3],
+            "msg_location_latitude": msg[4],
+            "msg_location_longitude": msg[5],
+            "msg_liked": msg_liked
+        }
 
     def add_user(self, username, password, email,
                  location_latitude=0.0, location_longitude=0.0) -> None:
@@ -119,22 +142,38 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert user {username}")
     
-    def get_user(self, username) -> list:
+    def get_user_by_name(self, username) -> dict:
         """
         Get user by `username`.
         """
         query = f"SELECT * FROM user WHERE username = '{username}';"
         self._execute_query(query, f"Get user {username}")
-        return self.cursor.fetchall()
+        user = self.cursor.fetchall()
+        return self._to_user_dict(user[0]) if user else {}
+
+    def get_user_by_id(self, userid) -> dict:
+        """
+        Get user by `userid`.
+        """
+        query = f"SELECT * FROM user WHERE userid = '{userid}';"
+        self._execute_query(query, f"Get user {userid}")
+        user = self.cursor.fetchall()
+        return self._to_user_dict(user[0]) if user else {}
     
-    def is_user_exist(self, username) -> bool:
+    def is_username_exist(self, username) -> bool:
         """
         Check if the user exists by `username`.
         """
-        return True if self.get_user(username) else False
+        return True if self.get_user_by_name(username) else False
+
+    def is_userid_exist(self, userid) -> bool:
+        """
+        Check if the user exists by `userid`.
+        """
+        return True if self.get_user_by_id(userid) else False
 
     def add_msg(self, msg_userid, msg_content,
-                msg_location_latitude, msg_location_longitude) -> list:
+                msg_location_latitude, msg_location_longitude) -> None:
         """
         Add a new message.
         """
@@ -150,29 +189,33 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert message \"{msg_content}\" by user {msg_userid}")
     
-    def get_user_latest_msg(self, userid) -> list:
+    def get_user_latest_msg(self, userid) -> dict:
         """
         Get user's latest message by `userid`.
         
-        Return: a list of tuple
+        Return: a msg dict
         """
         query = f"SELECT * FROM message WHERE msg_userid = {userid} ORDER BY msg_id DESC LIMIT 1;"
         self._execute_query(query, f"Get the lastest message by user {userid}")
-        return self.cursor.fetchall()
+        msg = self.cursor.fetchall()
+        return self._to_msg_dict(msg[0], userid) if msg else {}
     
     def get_user_all_msg(self, userid) -> list:
         """
         Get user's message history by `userid`.
 
-        Return: a list of tuple
+        Return: a list of msg dict
         """
         query = f"SELECT * FROM message WHERE msg_userid = {userid}"
         self._execute_query(query, f"Get all messages by user {userid}")
-        return self.cursor.fetchall()
+        msgs = self.cursor.fetchall()
+        return [self._to_msg_dict(msg, userid) for msg in msgs] if msgs else []
     
-    def get_msg_feed_by_location(self, latitude, longitude, distance_km=1) ->  list:
+    def _get_msg_feed_by_location(self, latitude, longitude, distance_km) -> list:
         """
         Get all messages around the location (`latitude`, `longitude`) within `distance_km`.
+
+        Return: a list of msg tuple
         """
         query = f"""
             SELECT *, 
@@ -185,6 +228,18 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Get message feed based on location ({latitude}, {longitude})")
         return self.cursor.fetchall()
+    
+    def get_msg_feed(self, userid, distance_km=1) -> list:
+        """
+        Get all messages around the user.
+
+        Return: a list of msg dict
+        """
+        user = self.get_user_by_id(userid)
+        msgs = self._get_msg_feed_by_location(latitude=user['location_latitude'],
+                                              longitude=user['location_longitude'],
+                                              distance_km=distance_km)
+        return [self._to_msg_dict(msg, userid) for msg in msgs] if msgs else []
     
     def update_location(self, userid, latitude, longitude) -> None:
         """
@@ -202,6 +257,8 @@ class MySQLConnector:
         """
         Like the message `msg_id` by the user `userid`.
         """
+        if self.is_liked_by_user(userid, msg_id):
+            return
         query = f"INSERT INTO likes (userid, msg_id) VALUES ('{userid}', '{msg_id}');"
         self._execute_query(query, f"Insert record: user {userid} liked message {msg_id}")
 
@@ -210,7 +267,7 @@ class MySQLConnector:
     
     def is_liked_by_user(self, userid, msg_id) -> bool:
         """
-        Check if the message `msg_id` is liked by the user `userid`
+        Check if the message `msg_id` is liked by the user `userid`.
         """
         query = f"SELECT * FROM likes WHERE userid = {userid} AND msg_id = {msg_id};"
         self._execute_query(query, f"Check if the message {msg_id} is liked by the user {userid}")
@@ -227,7 +284,7 @@ class Test:
         self.db._print_table_schema("user")
         print("=====Table 'message'=====")
         self.db._print_table_schema("message")
-        print("=====Table 'message'=====")
+        print("=====Table 'likes'=====")
         self.db._print_table_schema("likes")
 
     def run_unit_test(self):
@@ -254,10 +311,8 @@ class Test:
                          email=test_user['email'],
                          location_latitude=test_user['location_latitude'],
                          location_longitude=test_user['location_longitude'])
-        if self.db.is_user_exist(test_user['username']):
-            print("user exist")
-        else:
-            raise ValueError("user does not exist")
+        print("User: ", self.db.get_user_by_name(username=test_user['username']))
+        print("User: ", self.db.get_user_by_id(userid=1))
 
         ## msg
         self.db.add_msg(msg_userid=test_msg['msg_userid'],
@@ -271,8 +326,7 @@ class Test:
         self.db.update_location(userid=1,
             latitude=test_msg['msg_location_latitude'], longitude=test_msg['msg_location_longitude'])
         print("User 1's location: ", self.db.get_location(userid=1))
-        print("Message feed: ", self.db.get_msg_feed_by_location(
-            latitude=test_msg['msg_location_latitude'], longitude=test_msg['msg_location_longitude']))
+        print("Message feed: ", self.db.get_msg_feed(userid=1))
 
         # likes
         self.db.update_likes(userid=1, msg_id=1)
