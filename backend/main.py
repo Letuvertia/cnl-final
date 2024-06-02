@@ -21,12 +21,12 @@ def register():
     check = db_connector.check_user_exit(username)
 
     if check == -1:
-        return jsonify({'register_status': 'fail', 'error': 'Username already registered'}), 400
+        db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_latitude': 0.0, 'location_longitude': 0.0})
+        return jsonify({'register_status': 'success'}), 201
     # if db_connector.get_user_login(email):
     #     return jsonify({'register_status': 'fail', 'error': 'Email already registered'}), 400
 
-    db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_longitude': 0.0, 'location_latitude': 0.0})
-    return jsonify({'register_status': 'success'}), 201
+    return jsonify({'register_status': 'fail', 'error': 'Username already registered'}), 400
 
 @api.route("/login", methods=['POST'])
 def login(): #notdone (-changeloc)
@@ -58,8 +58,8 @@ def login(): #notdone (-changeloc)
                     'username': user_[0][1],
                     'userid': user_[0][0],
                     'email': user_[0][3],
-                    'location_longitude': user_[0][4],
-                    'location_latitude': user_[0][5]
+                    'location_latitude': user_[0][4],
+                    'location_longitude': user_[0][5]
                 },
                 'msg_feed': msg_feed
             }
@@ -79,8 +79,8 @@ def get_user_data():
             'username': user[0][1],
             'password': user[0][2],  # Password should not be returned in real applications
             'email': user[0][3],
-            'location_longitude': user[0][4],
-            'location_latitude': user[0][5]
+            'location_latitude': user[0][4],
+            'location_longitude': user[0][5]
         })
     else:
         return jsonify({'error': 'User not found'}), 404
@@ -133,8 +133,8 @@ def post_message():
     data['msg_likes'] = 0  
 
     #here need to get location from frontend
-    data['msg_location_longitude'] = 125.3
-    data['msg_location_latitude'] = 25.3
+    data['msg_location_latitude'] = 125.3
+    data['msg_location_longitude'] = 25.3
 
     db_connector.add_msg(data)
     return jsonify({'status': 'success'})
@@ -195,7 +195,7 @@ def test_mysql_connector():
     db.update_data_location(1,128.245,189.123)
     print(db.get_new_location(1))
 
-    db.show_msg(user_data[0]['location_longitude'],user_data[0]['location_latitude'],1)
+    db.show_msg(user_data[0]['location_latitude'],user_data[0]['location_longitude'],1)
 
 
 if __name__ == "__main__":
