@@ -2,10 +2,8 @@ from flask import Flask, request, jsonify
 
 from sql import MySQLConnector
 
+# api server
 api = Flask(__name__)
-
-from ex_db_data import user_data, message_data
-
 db_connector = MySQLConnector()
 
 @api.route("/register", methods=['POST'])
@@ -151,55 +149,7 @@ def like_message():
     db_connector.like_msg(msg_id, uid)
     return jsonify({'status': 'success'})  
 
-import mysql.connector
-from mysql.connector import Error
-
-
-def test_mysql_connector():
-    # Create a MySQLConnector instance
-    
-    db = MySQLConnector()
-
-    db.add_user(user_data[0])
-    print(user_data[0]['email'])
-    print("User added successfully.")
-
-    db.check_user_exit(user_data[0]['email'])
-    s = db.check_user_exit("iansu1220@gmail.com")
-    print(s)
-
-    # Test fetching user by email
-    user_login = db.get_user_login(user_data[0]['email'])
-    print("User login details:", user_login)
-
-    # Test fetching user by ID
-    user_by_id = db.get_user_id(user_data[0]['userid'])
-    print("User by ID details:", user_by_id)
-
-    db.print_table_schema("message")
-    db.add_msg(message_data)
-    print("Message added successfully.")
-
-    # Test fetching the newest message
-    newest_msg = db.get_msg_new(user_data[0]['userid'])
-    print("Newest message:", newest_msg)
-
-    # Test fetching all messages
-    all_msgs = db.get_msg_all(user_data[0]['userid'])
-    print("All messages:", all_msgs)
-
-    # Test liking a message
-    db.like_msg(message_data['msg_id'], user_data[0]['userid'])
-    print("Message liked successfully.")
-
-    db.update_data_location(1,128.245,189.123)
-    print(db.get_new_location(1))
-
-    db.show_msg(user_data[0]['location_latitude'],user_data[0]['location_longitude'],1)
-
 
 if __name__ == "__main__":
-    # test_mysql_connector()
-
     # start api server
-    api.run(host="0.0.0.0", port=5000)
+    api.run(host="0.0.0.0", port=5000, debug=True)
