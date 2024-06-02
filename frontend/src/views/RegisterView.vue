@@ -8,6 +8,7 @@
                 type="text"
                 class="form-control form-control-lg"
                 v-model="user.name"
+                required
                 />
             </div>
         
@@ -26,6 +27,7 @@
                 type="password"
                 class="form-control form-control-lg"
                 v-model="user.password"
+                required
                 />
             </div>
             <button type="submit" class="btn btn-dark btn-lg btn-block">
@@ -42,6 +44,8 @@
   
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -54,14 +58,29 @@ export default {
         };
     },
     methods: {
-        userRegistration() {
-            this.createUserWithEmailAndPassword(this.user.email, this.user.password)
+        async userRegistration() {
+            try {
+                const response = await axios.post('/register', {
+                    username: this.user.username,
+                    email: this.user.email,
+                    password: this.user.password
+                });
+
+                if (response.data.register_status === 'success') {
+                    this.$router.push('/login');
+                } else {
+                    alert('Registration failed. Please try again.');
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+            /*this.createUserWithEmailAndPassword(this.user.email, this.user.password)
             .then(() => {
                 this.$router.push("/login");
             })
             .catch((error) => {
                 alert(error.message);
-            });
+            });*/
         },
         createUserWithEmailAndPassword(email, password) {
             this.user_db[email] = password;

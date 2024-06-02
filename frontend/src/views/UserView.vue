@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="user">
-            <h1>{{ user }}'s Messages</h1>
+            <h1>{{ user.username }}'s Messages</h1>
             <table class="message-table">
                 <tbody>
                     <tr v-for="message in filteredMessages" :key="message.msg_id">
@@ -21,11 +21,15 @@
 </template>
   
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            user: 'grace',
-            messages: [
+            user: null,
+            messages: [],
+            loading: true,
+            /* messages: [
                 {
                     "msg_id": "0",
                     "msg_content": "計網實 4 顆星",
@@ -47,13 +51,47 @@ export default {
                     "msg_location": "",
                     "msg_user": "john"
                 },
-            ]
+            ], */
         };
     },
     computed: {
         filteredMessages() {
-            return this.messages.filter(message => message.msg_user === this.user);
+            if (this.user) {
+                return this.messages.filter(message => message.msg_user === this.user.username);
+            }
+            return [];
         }
-    }
+    },
+    mounted() {
+        this.loadUserData();
+        this.loadMessages();
+        this.loading = false;
+    },
+    methods: {
+        loadUserData() {
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                this.user = JSON.parse(userData);
+            } else {
+                this.$router.push('/login');
+            }
+        },
+        loadMessages() {
+            const msgFeed = localStorage.getItem('msgFeed');
+            if (msgFeed) {
+                this.messages = JSON.parse(msgFeed);
+            }
+        },
+        async fetchMessages() {
+            try {
+                const response = await axios.get('/feed');
+                this.messages = response.data;
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            } finally {
+                this.loading = false;
+            }
+        }
+    },
 };
 </script>
