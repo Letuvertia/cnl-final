@@ -67,8 +67,8 @@ class MySQLConnector:
                 username varchar(255),
                 password varchar(255),
                 email nvarchar(255) ,
-                location_longitude FLOAT,
-                location_latitude FLOAT
+                location_latitude FLOAT,
+                location_longitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'user'")
@@ -80,18 +80,18 @@ class MySQLConnector:
                 msg_id integer,
                 msg_content varchar(255),
                 msg_likes integer,
-                msg_location_longitude FLOAT,
-                msg_location_latitude FLOAT
+                msg_location_latitude FLOAT,
+                msg_location_longitude FLOAT
             );
             """
         self._execute_query(query, "Create table 'message'")
 
-    def check_user_exit(self, email):
-        query = f"SELECT * FROM user WHERE email = '{email}';"
+    def check_user_exit(self, username):
+        query = f"SELECT * FROM user WHERE username = '{username}';"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         if result:
-            return result[0]
+            return result[0] #userid
         else:
             return -1
 
@@ -107,6 +107,10 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert {user_data}")
         
+    def get_all_user(self):
+        query = "SELECT * FROM user;"
+        self._execute_query(query,"get all user")
+        return self.cursor.fetchall()
     
     def get_user_login(self, username):
         query = f"SELECT * FROM user WHERE username = '{username}';"
@@ -153,11 +157,13 @@ class MySQLConnector:
         self._execute_query(query)
         return self.cursor.fetchall()
     
+    #to show the user's all message history
     def get_msg_all(self,userid):
         query = f"SELECT * FROM message WHERE userid = {userid}"
         self._execute_query(query)
         return self.cursor.fetchall()
     
+    #to show the message around the user
     def show_msg(self,latitude,longitude,distance_km):
         query = f"""
             SELECT *, 

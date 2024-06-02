@@ -5,8 +5,8 @@ user_data = [
     "username": "JohnDoe",
     "password": "123456",
     "email": "johndoe@example.com",
-    "location_longitude": 121.123,
-    "location_latitude": 25.123,
+    "location_latitude": 121.123,
+    "location_longitude": 25.123,
   }
   # {
   #   "username": "Ann Doe",
@@ -22,6 +22,6 @@ message_data = {
         "msg_id": 1,
         "msg_content": "Hello, world!",
         "msg_likes": 0,
-        "msg_location_longitude": 121.123,
-        "msg_location_latitude": 25.123,
+        "msg_location_latitude": 121.123,
+        "msg_location_longitude": 25.123,
 }

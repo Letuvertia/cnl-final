@@ -18,18 +18,24 @@ def register():
     if not username or not password or not email:
         return jsonify({'register_status': 'fail', 'error': 'Username, password, and email are required'}), 400
 
-    if db_connector.get_user_login(email):
-        return jsonify({'register_status': 'fail', 'error': 'Email already registered'}), 400
+    check = db_connector.check_user_exit(username)
 
-    db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_longitude': 0.0, 'location_latitude': 0.0})
-    return jsonify({'register_status': 'success'}), 201
+    if check == -1:
+        db_connector.add_user({'username': username, 'password': password, 'email': email, 'location_latitude': 0.0, 'location_longitude': 0.0})
+        return jsonify({'register_status': 'success'}), 201
+    # if db_connector.get_user_login(email):
+    #     return jsonify({'register_status': 'fail', 'error': 'Email already registered'}), 400
+
+    return jsonify({'register_status': 'fail', 'error': 'Username already registered'}), 400
 
 @api.route("/login", methods=['POST'])
 def login(): #notdone (-changeloc)
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
-
+    longitude = data.get('longitude')
+    latitude = data.get('latitude')
+    
     if not username or not password:
         return jsonify({'auth_status': 'fail', 'error': 'Username and password are required'}), 400
 
@@ -38,8 +44,11 @@ def login(): #notdone (-changeloc)
     
     if user and user[0][2] == password:  # Password verification (hashing should be implemented in real applications)
         uid = user[0][0]
+
+        #this two have to wait unitil we get location information from frontend
         location = db_connector.get_new_location(uid)
-        db_connector.update_user_location(uid, location[0], location[1])
+        db_connector.update_data_location(uid, longitude, latitude)
+
         user_ = db_connector.get_user_id(uid)
         msg_feed = db_connector.get_msg_all(uid)
         return jsonify({
@@ -49,8 +58,8 @@ def login(): #notdone (-changeloc)
                     'username': user_[0][1],
                     'userid': user_[0][0],
                     'email': user_[0][3],
-                    'location_longitude': user_[0][4],
-                    'location_latitude': user_[0][5]
+                    'location_latitude': user_[0][4],
+                    'location_longitude': user_[0][5]
                 },
                 'msg_feed': msg_feed
             }
@@ -70,11 +79,17 @@ def get_user_data():
             'username': user[0][1],
             'password': user[0][2],  # Password should not be returned in real applications
             'email': user[0][3],
-            'location_longitude': user[0][4],
-            'location_latitude': user[0][5]
+            'location_latitude': user[0][4],
+            'location_longitude': user[0][5]
         })
     else:
         return jsonify({'error': 'User not found'}), 404
+
+@api.route("/users", methods=['GET'])
+def users():
+    all_users = db_connector.get_all_user()
+    return jsonify(all_users)
+
 
 @api.route("/feed", methods=['GET'])
 def get_feed():
@@ -90,12 +105,17 @@ def update_location(): #notdone(-changeloc)
     data = request.get_json()
     uid = data.get('userid')
 
+    longitude = data.get('longitude')
+    latitude = data.get('latitude')
+
     if not uid:
         return jsonify({'error': 'User ID and location are required'}), 400
     location = db_connector.get_new_location(uid)
-    db_connector.update_user_location(uid, location[0], location[1])
-    msg_feed = db_connector.get_message_all(uid)
-    return jsonify(msg_feed)
+    db_connector.update_data_location(uid, longitude, latitude)
+    
+    #as test_api.sh show,right now have no message to show
+    #msg_feed = db_connector.get_message_all(uid)
+    return jsonify({'status': 'success'})
 
 @api.route("/message", methods=['PUT'])
 def post_message():
@@ -106,7 +126,17 @@ def post_message():
     if not uid or not new_msg:
         return jsonify({'error': 'User ID and message are required'}), 400
 
-    db_connector.add_msg(new_msg)
+    #make json format fit add_msg
+    data['userid'] = uid
+    data['msg_id'] = 2
+    data['msg_content'] = new_msg
+    data['msg_likes'] = 0  
+
+    #here need to get location from frontend
+    data['msg_location_latitude'] = 125.3
+    data['msg_location_longitude'] = 25.3
+
+    db_connector.add_msg(data)
     return jsonify({'status': 'success'})
 
 @api.route("/like", methods=['PUT'])
@@ -165,7 +195,7 @@ def test_mysql_connector():
     db.update_data_location(1,128.245,189.123)
     print(db.get_new_location(1))
 
-    db.show_msg(user_data[0]['location_longitude'],user_data[0]['location_latitude'],1)
+    db.show_msg(user_data[0]['location_latitude'],user_data[0]['location_longitude'],1)
 
 
 if __name__ == "__main__":
