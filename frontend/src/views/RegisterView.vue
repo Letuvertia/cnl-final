@@ -1,13 +1,14 @@
 <template>
     <div class="container m-5">
-        <form @submit.prevent="userRegistration">
+        <form>
             <h1>Register</h1>
             <div class="form-group">
                 <label>Name &nbsp</label>
                 <input
                 type="text"
                 class="form-control form-control-lg"
-                v-model="user.name"
+                v-model="user.username"
+                required
                 />
             </div>
         
@@ -17,6 +18,7 @@
                 type="email"
                 class="form-control form-control-lg"
                 v-model="user.email"
+                required
                 />
             </div>
         
@@ -26,9 +28,10 @@
                 type="password"
                 class="form-control form-control-lg"
                 v-model="user.password"
+                required
                 />
             </div>
-            <button type="submit" class="btn btn-dark btn-lg btn-block">
+            <button type="button" class="btn btn-dark btn-lg btn-block" @click="userRegistration">
                 Register
             </button>
         
@@ -39,9 +42,12 @@
         </form>
     </div>
 </template>
+
   
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -50,21 +56,25 @@ export default {
                 email: "",
                 password: "",
             },
-            user_db: {},
         };
     },
     methods: {
-        userRegistration() {
-            this.createUserWithEmailAndPassword(this.user.email, this.user.password)
-            .then(() => {
-                this.$router.push("/login");
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
-        },
-        createUserWithEmailAndPassword(email, password) {
-            this.user_db[email] = password;
+        async userRegistration() {
+            console.log('info', this.user.username, this.user.password, this.user.email);
+            try {
+                const response = await axios.post('/api/register', {
+                    username: this.user.username,
+                    password: this.user.password,
+                    email: this.user.email,
+                });
+                if (response.data.register_status === 'success') {
+                    this.$router.push('/login');
+                } else {
+                    alert('Registration failed. Please try again.');
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
         },
     },
 };
