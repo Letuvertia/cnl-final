@@ -44,7 +44,7 @@ export default {
             if (this.login_check(email, password)) {
                 localStorage.setItem('authToken', email); // Store token in localStorage
                 localStorage.setItem('loginTime', new Date().getTime()); // Store login time
-                this.$router.push("/user"); // Redirect to user page
+                this.$router.push("/main"); // Redirect to user page
             } else {
                 alert("Invalid email or password.");
             }
