@@ -189,17 +189,6 @@ class MySQLConnector:
         """
         self._execute_query(query, f"Insert message \"{msg_content}\" by user {msg_userid}")
     
-    def get_user_latest_msg(self, userid) -> dict:
-        """
-        Get user's latest message by `userid`.
-        
-        Return: a msg dict
-        """
-        query = f"SELECT * FROM message WHERE msg_userid = {userid} ORDER BY msg_id DESC LIMIT 1;"
-        self._execute_query(query, f"Get the lastest message by user {userid}")
-        msg = self.cursor.fetchall()
-        return self._to_msg_dict(msg[0], userid) if msg else {}
-    
     def get_user_all_msg(self, userid) -> list:
         """
         Get user's message history by `userid`.
@@ -248,11 +237,6 @@ class MySQLConnector:
         query = f"UPDATE user SET location_latitude = {latitude}, location_longitude = {longitude} WHERE userid = {userid};"
         self._execute_query(query, f"Update user {userid}'s location ({latitude, longitude})")
     
-    def get_location(self, userid) -> list:
-        query = f"SELECT location_latitude, location_longitude FROM user WHERE userid = {userid};"
-        self._execute_query(query, f"Get user location {userid}")
-        return self.cursor.fetchall()
-
     def update_likes(self, userid, msg_id) -> None:
         """
         Like the message `msg_id` by the user `userid`.
@@ -308,9 +292,7 @@ class Test:
         ## user
         self.db.add_user(username=test_user['username'],
                          password=test_user['password'],
-                         email=test_user['email'],
-                         location_latitude=test_user['location_latitude'],
-                         location_longitude=test_user['location_longitude'])
+                         email=test_user['email'])
         print("User: ", self.db.get_user_by_name(username=test_user['username']))
         print("User: ", self.db.get_user_by_id(userid=1))
 
@@ -319,19 +301,19 @@ class Test:
                         msg_content=test_msg['msg_content'],
                         msg_location_latitude=test_msg['msg_location_latitude'],
                         msg_location_longitude=test_msg['msg_location_longitude'])
-        print("Latest message: ", self.db.get_user_latest_msg(userid=1))
         print("User 1's message: ", self.db.get_user_all_msg(userid=1))
 
         # location
         self.db.update_location(userid=1,
-            latitude=test_msg['msg_location_latitude'], longitude=test_msg['msg_location_longitude'])
-        print("User 1's location: ", self.db.get_location(userid=1))
+                                latitude=test_msg['msg_location_latitude'],
+                                longitude=test_msg['msg_location_longitude'])
         print("Message feed: ", self.db.get_msg_feed(userid=1))
 
         # likes
         self.db.update_likes(userid=1, msg_id=1)
         print("Message 1 liked by user 1: ", self.db.is_liked_by_user(userid=1, msg_id=1))
         print("User 1's message: ", self.db.get_user_all_msg(userid=1))
+
 
 if __name__ == "__main__":
     tester = Test()
