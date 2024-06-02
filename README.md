@@ -24,7 +24,7 @@ Run the frontend server on http://localhost:5173. `frontend` serves the LocaSync
 ## Notes for Developers
 **大家看這裡！！**
 
-### Use branch!
+### Use Branch!
 
 Open a new branch and develop features (or add new files if needed) in the corresponding folder. When you're finished, open a pull request and fix merge conflict first before merging the branch into the main branch.
 
@@ -90,9 +90,30 @@ npm run dev
 
 Go to http://localhost:5173 to check out the website.
 
+## SQL Data Format
+### `user` table
+```sql
+userid serial PRIMARY KEY,
+username varchar(255),
+password varchar(255),
+email varchar(255) ,
+location_latitude FLOAT,
+location_longitude FLOAT
+```
+
+### `message` table
+```sql
+msg_id serial PRIMARY KEY,
+msg_userid integer,
+msg_likes integer,
+msg_content varchar(255),
+msg_location_latitude FLOAT,
+msg_location_longitude FLOAT
+```
+
 ## API spec
 ### `/register` (POST)
-Register an user account with user data.
+Register a new user account.
 
 Arg:
 ```json
@@ -105,7 +126,7 @@ Arg:
 Return:
 ```json
 {
-    "register_status": "", // success or fail
+    "register_status": "__success or fail__"
 }
 ```
 
@@ -116,93 +137,34 @@ Arg:
 ```json
 {
     "username": "",
-    "password": "",
-    "location": ""
+    "password": ""
 }
 ```
 Return:
 ```json
 {
-    "auth_status": "", // success or fail
-    "data": {
-        "userdata": {
-            "username": "",
-            "userid": "",
-            "email": "",
-            "location": ""
-        },
-        "msg_feed": [
-            {
-                "msg_id": "",
-                "msg_content": "",
-                "msg_likes": "",
-                "msg_location": "",
-                "msg_user": ""
-            },
-            {
-                "msg_id": "",
-                "msg_content": "",
-                "msg_likes": "",
-                "msg_location": "",
-                "msg_user": ""
-            },
-            ...
-        ]
+    "auth_status": "__success or fail__",
+    "userdata": {
+        "userid": "",
+        "username": "",
+        "email": ""
     }
 }
 ```
 
-### `/userdata` (GET)
-Get user data.
-
-Arg:
-- `userid`
-
-Return:
-```json
-{
-    "username": "",
-    "password": "",
-    "email": "",
-    "location": ""
-}
-```
-
-### `/feed` (GET)
-Get message feed.
-
-Arg:
-- `userid`
-
-Return:
-```json
-[
-    {
-        "msg_id": "",
-        "msg_content": "",
-        "msg_likes": "",
-        "msg_location": "",
-        "msg_user": ""
-    },
-    {
-        "msg_id": "",
-        "msg_content": "",
-        "msg_likes": "",
-        "msg_location": "",
-        "msg_user": ""
-    },
-    ...
-]
-```
-
 ### `/location` (POST)
-Send an updated location of the user to the backend. Get the updated message feed.
+Update both location and message feed.
+
+Update every 15s.
+
+`msg_liked`: `true` if the user has already liked the message, else `false`.
 
 Arg:
 ```json
 {
     "userid": "",
-    "location": ""
+    "location_latitude": "",
+    "location_longitude":""
 }
 ```
 Return:
@@ -210,17 +172,54 @@ Return:
 [
     {
         "msg_id": "",
-        "msg_content": "",
+        "msg_userid": "",
         "msg_likes": "",
-        "msg_location": "",
-        "msg_user": ""
+        "msg_content": "",
+        "msg_location_latitude": "",
+        "msg_location_longtitude": "",
+        "msg_liked": true
     },
     {
         "msg_id": "",
-        "msg_content": "",
+        "msg_userid": "",
         "msg_likes": "",
-        "msg_location": "",
-        "msg_user": ""
+        "msg_content": "",
+        "msg_location_latitude": "",
+        "msg_location_longtitude": "",
+        "msg_liked": false
+    },
+    ...
+]
+```
+
+### `/feed` (GET)
+Update only message feed.
+
+Update every 3s.
+
+Arg:
+- `userid`
+
+Return:
+```json
+[
+    {
+        "msg_id": "",
+        "msg_userid": "",
+        "msg_likes": "",
+        "msg_content": "",
+        "msg_location_latitude": "",
+        "msg_location_longtitude": "",
+        "msg_liked": true
+    },
+    {
+        "msg_id": "",
+        "msg_userid": "",
+        "msg_likes": "",
+        "msg_content": "",
+        "msg_location_latitude": "",
+        "msg_location_longtitude": "",
+        "msg_liked": false
     },
     ...
 ]
@@ -235,9 +234,10 @@ Arg:
 {
     "userid": "",
     "new_msg": {
+        "msg_userid": "",
         "msg_content": "",
-        "msg_location": "",
-        "msg_user": ""
+        "msg_location_latitude": "",
+        "msg_location_longtitude": ""
     }
 }
 ```
@@ -250,6 +250,44 @@ Arg:
 ```json
 {
     "userid": "",
-    "msg_id": "",
+    "msg_id": ""
+}
+```
+
+### `/userdata` (GET)
+Get user data and message history.
+
+Arg:
+- `userid`
+
+Return:
+```json
+{
+    "userid": "",
+    "username": "",
+    "email": "",
+    "location_latitude": "",
+    "location_longitude":"",
+    "msg_history": [
+        {
+            "msg_id": "",
+            "msg_userid": "",
+            "msg_likes": "",
+            "msg_content": "",
+            "msg_location_latitude": "",
+            "msg_location_longtitude": "",
+            "msg_liked": true
+        },
+        {
+            "msg_id": "",
+            "msg_userid": "",
+            "msg_likes": "",
+            "msg_content": "",
+            "msg_location_latitude": "",
+            "msg_location_longtitude": "",
+            "msg_liked": false
+        },
+        ...
+    ]
 }
 ```
