@@ -20,6 +20,7 @@
 import MessageInput from '../components/MessageInput.vue';
 import Bubble from '../components/Bubble.vue';
 import UserLocation from '../components/UserLocation.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -32,6 +33,7 @@ export default {
       userid: 0,
       username: '',
       userLocation: { latitude: 0, longitude: 0 },
+      msg_feed: [],
       bubbles: [],
       bubble_properties: []
     };
@@ -40,9 +42,16 @@ export default {
     handleLocationUpdate(location) { // update location and send to backend
       this.userLocation = location;
       const msg_location_json = JSON.stringify({ userid: this.userid, location: this.userLocation});
+      axios.post('http://localhost:5000/location', msg_location_json);
+      axios.get('http://localhost:5000/feed,', JSON.stringify({ userid : this.userid }))
+        .then(
+          response => {
+            this.msg_feed = JSON.parse(response.data.msg_feed);
+          }
+        )
       // send location message to backend
       // send request for msg_feed to backend
-      // this.msgFeedsToBubbles(msg_feed_json);
+      this.msgFeedsToBubbles();
     },
     newMessage(text) { // send entered message to backend
       const msg_put = {
@@ -54,14 +63,21 @@ export default {
         }
       };
       const msg_put_json = JSON.stringify(msg_put);
+      axios.put('http://localhost:5000/message', msg_put_json);
+      axios.get('http://localhost:5000/feed,', JSON.stringify({ userid : this.userid }))
+        .then(
+          response => {
+            this.msg_feed = JSON.parse(response.data.msg_feed);
+            console.log(this.msg_feed);
+          }
+        )
       // send new message to backend
       // send a request for msg_feed to backend
-      // this.msgFeedsToBubbles(msg_feed_json);
+      this.msgFeedsToBubbles();
     },
-    msgFeedsToBubbles(msg_feed_json) { // convert msg_feed from backend to local bubbles
-      const msg_feed = JSON.parse(msg_feed_json);
+    msgFeedsToBubbles() { // convert msg_feed to local bubbles
       this.bubbles = [];
-      for (let i = 0; i < msg_feed.length; i++) {
+      for (let i = 0; i < this.msg_feed.length; i++) {
         this.addBubble(m, i);
       }
     },
@@ -95,9 +111,16 @@ export default {
         liked: !bubble.liked
       }
       const msg_like_json = JSON.stringify(like_msg);
+      axios.put('http://localhost:5000/like', msg_like_json);
+      axios.get('http://localhost:5000/get_feed,', JSON.stringify({ userid : this.userid }))
+        .then(
+          response => {
+            this.msg_feed = JSON.parse(response.data.msg_feed);
+          }
+        )
       // send like message to backend
       // send request for msg_feed to backend
-      // this.msgFeedsToBubbles(msg_feed_json);
+      this.msgFeedsToBubbles();
     },
     generateRandomProperties() {
       for (let i = 0; i < 100; i++) {

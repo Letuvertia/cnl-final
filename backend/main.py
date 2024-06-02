@@ -157,7 +157,7 @@ from mysql.connector import Error
 
 def test_mysql_connector():
     # Create a MySQLConnector instance
-    
+
     db = MySQLConnector()
 
     db.add_user(user_data[0])
