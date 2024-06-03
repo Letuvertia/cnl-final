@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="user">
-            <h1>{{ user.username }}'s Messages</h1>
+            <h1>{{ user }}'s Messages</h1>
             <table class="message-table">
                 <tbody>
                     <tr v-for="message in messages" :key="message.msg_id">

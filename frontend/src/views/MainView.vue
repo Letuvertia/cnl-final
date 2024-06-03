@@ -22,8 +22,6 @@ import Bubble from '../components/Bubble.vue';
 import UserLocation from '../components/UserLocation.vue';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:5000';
-
 export default {
   components: {
     MessageInput,

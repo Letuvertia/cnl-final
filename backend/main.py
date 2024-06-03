@@ -5,7 +5,7 @@ from sql import MySQLConnector
 # api server
 api = Flask(__name__)
 db_connector = MySQLConnector()
-# db_connector.clear_database() # run this line to empty the database
+db_connector.clear_database() # run this line to empty the database
 
 @api.route("/register", methods=['POST'])
 def register():
