@@ -62,15 +62,6 @@ export default {
             } catch (error) {
                 alert('An error occurred: ' + error.message);
             }
-            /*const email = this.user.email;
-            const password = this.user.password;
-            if (this.login_check(email, password)) {
-                localStorage.setItem('authToken', email); // Store token in localStorage
-                localStorage.setItem('loginTime', new Date().getTime()); // Store login time
-                this.$router.push("/main"); // Redirect to user page
-            } else {
-                alert("Invalid email or password.");
-            }*/
         },
         login_check(email, password) {
             return email in this.user_db && this.user_db[email] === password;
