@@ -49,7 +49,7 @@ export default {
                 });
 
                 if (response.data.auth_status === 'success') {
-                    const userData = response.userdata;
+                    const userData = response.data.userdata;
 
                     localStorage.setItem('authToken', this.userLogin.username); // Store token in localStorage
                     localStorage.setItem('loginTime', new Date().getTime()); // Store login time
