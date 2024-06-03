@@ -42,7 +42,6 @@ export default {
   },
   mounted() {
     this.userid = JSON.parse(localStorage.getItem('userData')).userid;
-    console.log("user", this.userid, "log in");
     this.username = JSON.parse(localStorage.getItem('userData')).username;
     this.generateRandomProperties();
     this.startUpdatingFeed();
@@ -53,64 +52,50 @@ export default {
   },
   methods: {
     handleLocationUpdate(location) {
-      console.log("update location");
       this.userLocation = location;
-      const msg_location = {
-        userid: this.userid,
-        location_latitude: this.userLocation.latitude,
-        location_longitude: this.userLocation.longitude
-      };
-      axios.post('/api/location', msg_location) // send location to backend, this updates msg_feed as well
-      .then(
-        response => {
+      axios.post('/api/location', {
+          userid: this.userid,
+          location_latitude: this.userLocation.latitude,
+          location_longitude: this.userLocation.longitude
+        })
+        .then(response => {
           this.msg_feed = response.data;
-        }
-      )
-      .catch(
-        error => {
+        })
+        .catch(error => {
           console.error('Error updating location:', error);
-        }
-      );
+        });
     },
     startUpdatingFeed() {
       this.feedIntervalId = setInterval(this.getFeed, 3000);
     },
     newMessage(text) {
-      const msg_put = {
-        userid: this.userid,
-        new_msg: {
-          msg_userid: this.userid,
-          msg_content: text,
-          msg_location_latitude: this.userLocation.latitude,
-          msg_location_longitude: this.userLocation.longitude
-        }
-      };
-      axios.put('/api/message', msg_put) // send new message to backend
-      .then()
-      .catch(
-        error => {
-          console.error('Error updating location:', error);
-        }
-      );
-      this.getFeed(); // send a request for msg_feed to backend
+      axios.put('/api/message', {
+          userid: this.userid,
+          new_msg: {
+            msg_userid: this.userid,
+            msg_content: text,
+            msg_location_latitude: this.userLocation.latitude,
+            msg_location_longitude: this.userLocation.longitude
+          }
+        })
+        .then()
+        .catch(error => {
+          console.error('Error adding a new message :', error);
+        });
+      this.getFeed();
     },
     getFeed() {
-      console.log("asking for userid=", this.userid);
       axios.get(`/api/feed?userid=${this.userid}`)
-      .then(
-        response => {
+        .then(response => {
           this.msg_feed = response.data;
-        }
-      )
-      .catch(
-        error => {
-          console.error('Error updating msg_feed:', error);
-        }
-      );
+        })
+        .catch(error => {
+          console.error('Error updating feed:', error);
+        });
       this.msg_feed.sort((a, b) => a.msg_id - b.msg_id);
       this.msgFeedsToBubbles();
     },
-    msgFeedsToBubbles() { // convert msg_feed to local bubbles
+    msgFeedsToBubbles() {
       this.bubbles = [];
       for (let i = 0; i < this.msg_feed.length; i++) {
         let msg = this.msg_feed[i];
@@ -137,18 +122,15 @@ export default {
     },
     toggleLike(index) {
       const bubble = this.bubbles[index];
-      const like_msg = {
-        userid: this.userid,
-        msg_id: bubble.id
-      }
-      axios.put('/api/like', like_msg)  // send like message to backend
-      .then()
-      .catch(
-        error => {
+      axios.put('/api/like', {
+          userid: this.userid,
+          msg_id: bubble.id
+        })
+        .then()
+        .catch(error => {
           console.error('Error updating location:', error);
-        }
-      );
-      this.getFeed(); // send request for msg_feed to backend
+        });
+      this.getFeed();
     },
     generateRandomProperties() {
       this.bubble_properties = [];
