@@ -155,7 +155,7 @@ class MySQLConnector:
         """
         Get user by `userid`.
         """
-        query = f"SELECT * FROM user WHERE userid = '{userid}';"
+        query = f"SELECT * FROM user WHERE userid = {userid};"
         self._execute_query(query, f"Get user {userid}")
         user = self.cursor.fetchall()
         return self._to_user_dict(user[0]) if user else {}
