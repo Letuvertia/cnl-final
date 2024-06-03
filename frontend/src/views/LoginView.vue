@@ -1,5 +1,6 @@
 <template>
-    <div class="container m-5">
+    <div style="width: 100vw; height: 100vh; position: fixed; left:0px; top:0px; z-index: 1001; background-color: white;"></div>
+    <div class="container m-5" style="z-index: 1002;">
         <form @submit.prevent="userLogin">
             <h1>Login</h1>
             <div class="form-group">
@@ -30,7 +31,6 @@
   
 <script>
 import axios from 'axios';
-
 export default {
     data() {
         return {
