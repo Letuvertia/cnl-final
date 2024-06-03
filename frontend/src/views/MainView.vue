@@ -4,8 +4,9 @@
     <MessageInput @new-message="newMessage" />
     <Bubble 
       v-for="(bubble, index) in bubbles" 
-      :key="index" 
-      :text="bubble.text"
+      :key="index"
+      :id="bubble.id"
+      :content="bubble.content"
       :likes="bubble.likes" 
       :liked="bubble.liked"
       :top="bubble.top"
@@ -41,14 +42,18 @@ export default {
   },
   mounted() {
     this.userid = JSON.parse(localStorage.getItem('userData')).userid;
+    console.log("user", this.userid, "log in");
     this.username = JSON.parse(localStorage.getItem('userData')).username;
+    this.generateRandomProperties();
     this.startUpdatingFeed();
   },
   beforeDestroy() {
+    console.log("stop feeding", this.userid);
     clearInterval(this.feedIntervalId);
   },
   methods: {
     handleLocationUpdate(location) {
+      console.log("update location");
       this.userLocation = location;
       const msg_location = {
         userid: this.userid,
@@ -66,7 +71,6 @@ export default {
           console.error('Error updating location:', error);
         }
       );
-      this.msgFeedsToBubbles();
     },
     startUpdatingFeed() {
       this.feedIntervalId = setInterval(this.getFeed, 3000);
@@ -89,9 +93,9 @@ export default {
         }
       );
       this.getFeed(); // send a request for msg_feed to backend
-      this.msgFeedsToBubbles();
     },
     getFeed() {
+      console.log("asking for userid=", this.userid);
       axios.get(`/api/feed?userid=${this.userid}`)
       .then(
         response => {
@@ -102,25 +106,26 @@ export default {
         error => {
           console.error('Error updating msg_feed:', error);
         }
-      )
+      );
+      this.msg_feed.sort((a, b) => a.msg_id - b.msg_id);
+      this.msgFeedsToBubbles();
     },
     msgFeedsToBubbles() { // convert msg_feed to local bubbles
       this.bubbles = [];
       for (let i = 0; i < this.msg_feed.length; i++) {
-        this.addBubble(m, i);
+        let msg = this.msg_feed[i];
+        this.bubbles.push(
+          {
+            id: msg.msg_id,
+            content: msg.msg_content,
+            likes: msg.msg_likes,
+            liked: msg.msg_liked,
+            top: this.bubble_properties[i].t,
+            left: this.bubble_properties[i].l,
+            color: this.bubble_properties[i].c
+          }
+        );
       }
-    },
-    addBubble(msg, index) {
-      const bubble = {
-        id: msg.msg_userid,
-        content: msg.msg_content,
-        likes: msg.msg_likes,
-        liked: msg.msg_liked,
-        top: this.bubble_properties[index].t,
-        left: this.bubble_properties[index].l,
-        color: this.bubble_properties[index].c
-      }
-      this.bubbles.push(bubble);
     },
     generateRandomColor() {
       const letters = '0123456789ABCDEF';
@@ -144,17 +149,43 @@ export default {
         }
       );
       this.getFeed(); // send request for msg_feed to backend
-      this.msgFeedsToBubbles();
     },
     generateRandomProperties() {
-      for (let i = 0; i < 100; i++) {
-        this.bubble_properties.push({
-          t: Math.random() * (window.innerHeight - 200) + 50,
-          l: Math.random() * (window.innerWidth - 150) + 25,
-          c: this.generateRandomColor()
-        });
+      this.bubble_properties = [];
+      const maxAttempts = 1000;
+      for (let i = 0; i < 50; i++) {
+        let attempts = 0;
+        let overlapping = true;
+        let property;
+        while (overlapping && attempts < maxAttempts) {
+          property = {
+            t: Math.random() * (window.innerHeight - 200) + 50,
+            l: Math.random() * (window.innerWidth - 150) + 25,
+            c: this.generateRandomColor()
+          };
+          overlapping = this.checkOverlap(property);
+          attempts++;
+        }
+        if (!overlapping) {
+          this.bubble_properties.push(property);
+        }
       }
+    },
+    checkOverlap(newProperty) {
+      for (const property of this.bubble_properties) {
+        const dx = newProperty.l - property.l;
+        const dy = newProperty.t - property.t;
+        if (dx * dx + dy * dy < 18000) {
+          return true;
+        }
+      }
+      return false;
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    clearInterval(this.feedIntervalId);
+    console.log('stop feeding', this.userid);
+    next();
   }
 };
 </script>
