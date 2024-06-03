@@ -166,7 +166,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     clearInterval(this.feedIntervalId);
-    console.log('stop feeding', this.userid);
     next();
   }
 };

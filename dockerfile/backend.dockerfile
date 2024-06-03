@@ -15,6 +15,9 @@ RUN apt-get update && \
 RUN python3 -m venv venv && . venv/bin/activate && \
     pip install Flask mysql-connector-python
 
+# Copy python files
+COPY backend backend
+
 # Expose port for backend API
 EXPOSE 5000
 
