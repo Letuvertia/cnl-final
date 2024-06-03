@@ -18,10 +18,6 @@ services:
       - internal-network
     depends_on:
       - db
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./backend:/app/backend
 
   frontend:
     build:
@@ -34,8 +30,6 @@ services:
       - backend
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend/src:/app/src
 
 networks:
   internal-network:
