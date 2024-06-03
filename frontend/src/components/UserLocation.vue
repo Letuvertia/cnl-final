@@ -11,7 +11,7 @@ export default {
   },
   mounted() {
     this.updateLocation();
-    this.locationInterval = setInterval(this.updateLocation, 5000);
+    this.locationInterval = setInterval(this.updateLocation, 60000);
   },
   beforeDestroy() {
     clearInterval(this.locationInterval);
@@ -22,7 +22,7 @@ export default {
         navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
       }
       else {
-        console.log("Geolocation is not supported by this browser.");
+        console.log('Geolocation is not supported by this browser.');
       }
     },
     showPosition(position) {
