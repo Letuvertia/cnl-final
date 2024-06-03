@@ -22,8 +22,6 @@ import Bubble from '../components/Bubble.vue';
 import UserLocation from '../components/UserLocation.vue';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:5000';
-
 export default {
   components: {
     MessageInput,
@@ -52,7 +50,7 @@ export default {
       this.userLocation = location;
       const msg_location = {
         userid: this.userid,
-        location_latitude: this.location.latitude,
+        location_latitude: this.userLocation.latitude,
         location_longitude: this.userLocation.longitude
       };
       axios.post('/api/location', msg_location) // send location to backend, this updates msg_feed as well
@@ -78,7 +76,7 @@ export default {
           msg_userid: this.userid,
           msg_content: text,
           msg_location_latitude: this.userLocation.latitude,
-          msg_location_longitude: this.location.longitude
+          msg_location_longitude: this.userLocation.longitude
         }
       };
       axios.put('/api/message', msg_put) // send new message to backend
