@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import{reactive, onMounted, toRaw} from 'vue';
 import axios from 'axios';
 
-const test_url = '/api/userdata?uid=123'
+const test_url = '/api/userdata?userid=1'
 
 export default {
     setup() {
