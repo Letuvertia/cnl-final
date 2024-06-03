@@ -60,7 +60,6 @@ export default {
     },
     methods: {
         async userRegistration() {
-            console.log('info', this.user.username, this.user.password, this.user.email);
             try {
                 const response = await axios.post('/api/register', {
                     username: this.user.username,

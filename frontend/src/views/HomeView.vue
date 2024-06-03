@@ -25,7 +25,7 @@ onMounted(() => {
   isAuthenticated.value = checkAuthentication();
 
   if (isAuthenticated.value) {
-    router.push('/user'); // Redirect to user view if authenticated
+    router.push('/main'); // Redirect to main view if authenticated
   } else {
     router.push('/login'); // Redirect to login view if not authenticated
   }
