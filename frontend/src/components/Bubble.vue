@@ -1,7 +1,7 @@
 <template>
-  <div :class="['bubble', randomClass]" :style="bubbleStyle" @click="toggleLike">
-    <p>{{ text }}</p>
-    <p>Likes: {{ likes }}</p>
+  <div :class="['bubble']" :style="bubbleStyle" @click="toggleLike">
+    <p class="bubble-text">{{ content }}</p>
+    <p class="bubble-likes">Likes: {{ likes }}</p>
   </div>
 </template>
 
@@ -39,20 +39,20 @@ export default {
   },
   computed: {
     bubbleStyle() {
-      const size = 100 + this.likes * 20;
+      const size = 150 + this.likes * 20;
       return {
         width: `${size}px`,
         height: `${size}px`,
         position: 'absolute',
-        top: `${this.top}px`,
-        left: `${this.left}px`,
+        top: `${this.top - size / 2}px`,
+        left: `${this.left - size / 2}px`,
         backgroundColor: this.color
       };
     }
   },
   methods: {
     toggleLike() {
-      this.$emit('toggle-like', !this.liked);
+      this.$emit('toggle-like');
     }
   }
 };
@@ -61,14 +61,25 @@ export default {
 <style scoped>
 .bubble {
   border-radius: 50%;
-  background-color: #3498db;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  cursor: pointer;
   color: white;
   font-size: 16px;
   text-align: center;
-  flex-direction: column;
-  cursor: pointer;
+  position: relative;
+}
+
+.bubble-text {
+  margin: 0;
+}
+
+.bubble-likes {
+  margin: 0;
+  font-size: 12px;
+  position: absolute;
+  bottom: 10px;
 }
 </style>

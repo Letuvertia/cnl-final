@@ -12,9 +12,6 @@ class MySQLConnector:
         
         # initialize database
         self._connect(host, database, user, password)
-        self._create_user_table()
-        self._create_message_table()
-        self._create_likes_table()
 
     def __exit__(self):
         if self.connection:
@@ -93,6 +90,14 @@ class MySQLConnector:
         self.cursor.execute(query)
         for column in self.cursor.fetchall():
             print(column)
+    
+    def init_database(self) -> None:
+        """
+        Initialize all tables. Call only once when start the API server.
+        """
+        self._create_user_table()
+        self._create_message_table()
+        self._create_likes_table()
 
     def clear_database(self) -> None:
         """
