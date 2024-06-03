@@ -1,7 +1,7 @@
 # LocaSync
 極短距離的即時通訊社群軟體
 
-The website v1.0.0 is now deployed on http://ws1.csie.org:5173 !!
+The website v1.0.0 is now deployed on https://ws1.csie.org:5173 !!
 
 ## System Design
 There are 3 docker containers in this design, `db`, `backend` and `frontend`.
