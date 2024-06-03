@@ -20,14 +20,6 @@ export default {
       type: Number,
       required: true
     },
-    location: {
-      type: Object,
-      required: true
-    },
-    user: {
-      type: String,
-      required: true
-    },
     liked: {
       type: Boolean,
       required: true
