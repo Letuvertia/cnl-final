@@ -1,9 +1,24 @@
 <template>
     <div>
         <div v-if="user">
-            <h1>{{ user }}'s Messages</h1>
+            <h1> {{ user }}'s page </h1>
+            <br>
+            <h2> Info </h2>
+            <p> 📧 {{ data.email }}</p>
+            <p> 📍 ({{ data.location_latitude }}, {{ data.location_longitude }})</p>
+            <br>
+            <h2> Messages </h2>
             <table class="message-table">
                 <tbody>
+                    <tr>
+                        <td>CNL sucks</td>
+                        <td class="likes-cell">
+                            <i>♡ &nbsp</i>
+                            <span>3</span>
+                        </td>
+                    </tr>
+
+
                     <tr v-for="message in messages" :key="message.msg_id">
                         <td>{{ message.msg_content }}</td>
                         <td class="likes-cell">
@@ -29,6 +44,7 @@ export default {
         return {
             user: null,
             messages: [],
+            data: {},
             loading: true,
         };
     },
@@ -52,6 +68,7 @@ export default {
                     });
                     if (response.status === 200) {
                         this.messages = response.data.msg_history;
+                        this.data = response.data;
                     } else {
                         alert('Failed to load user data');
                         this.$router.push('/login');
