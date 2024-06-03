@@ -1,20 +1,24 @@
 # LocaSync
 極短距離的即時通訊社群軟體
 
+The website v1.0.0 is now deployed on http://ws1.csie.org:5173 !!
+
 ## System Design
 There are 3 docker containers in this design, `db`, `backend` and `frontend`.
 
 1. `db`
 
-Run the FreeRadius server. `backend` accesses the server within the internal network on port `1812`.
+Run the MySQL server exposed at `db:3306` within the docker internal network.
 
 2. `backend`
 
-Run the backend server on http://localhost:5000. `backend` provides APIs for `frontend` to login, getting message feeds, and sending new messages from users. The API server is built with Flask.
+Run the Flask API server exposed at `backend:5000` within the docker internal network.
+The API server provides APIs for the Vue app to register, login, get message feed, like message and update location by interacting with the MySQL server.
+See API spec below.
 
 3. `frontend`
 
-Run the frontend server on http://localhost:5173. `frontend` serves the LocaSync website for the browser to access. The website is built with Vue.js.
+Run the Vue app LocaSync on http://localhost:5173.
 
 ## Quick Start Up
 1. Install Docker
@@ -58,11 +62,17 @@ Install Python and execute files in `./backend`.
 python3 backend/main.py
 ```
 
-To test an API, use `curl`.
+Use `curl` to test APIs. See `backend/test_api.sh` for more examples.
 
 ```bash
-# This is an example API `/userdata` with one argument `uid`.
-curl "http://localhost:5000/userdata?uid=123"
+# POST
+curl -X POST -H "Content-Type: application/json" -d '{"username":"newuser1","password":"password123","email":"test@email.com"}' "http://localhost:5000/register"
+
+# GET
+curl -X GET "http://localhost:5000/feed?userid=1"
+
+# PUT
+curl -X PUT -H "Content-Type: application/json" -d '{"userid":1,"new_msg":{"msg_userid": 1,"msg_content": "Hello!","msg_location_latitude": "125.34","msg_location_longitude": "25.4"}}' "http://localhost:5000/message"
 ```
 
 2. `frontend`
