@@ -49,13 +49,11 @@ export default {
                 });
 
                 if (response.data.auth_status === 'success') {
-                    const userData = response.data.data.userdata;
-                    const msgFeed = response.data.data.msg_feed;
+                    const userData = response.userdata;
 
                     localStorage.setItem('authToken', this.userLogin.username); // Store token in localStorage
                     localStorage.setItem('loginTime', new Date().getTime()); // Store login time
                     localStorage.setItem('userData', JSON.stringify(userData));
-                    localStorage.setItem('msgFeed', JSON.stringify(msgFeed));
 
                     this.$router.push("/main");
                 } else {
