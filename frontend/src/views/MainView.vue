@@ -58,7 +58,7 @@ export default {
       axios.post('/api/location', msg_location) // send location to backend, this updates msg_feed as well
       .then(
         response => {
-          this.msg_feed = JSON.parse(response.data);
+          this.msg_feed = response.data;
         }
       )
       .catch(
@@ -95,8 +95,7 @@ export default {
       axios.get(`/api/feed?userid=${this.userid}`)
       .then(
         response => {
-          console.log(response.data);
-          this.msg_feed = JSON.parse(response.data);
+          this.msg_feed = response.data;
         }
       )
       .catch(
