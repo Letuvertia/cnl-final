@@ -40,6 +40,8 @@ export default {
     };
   },
   mounted() {
+    this.userid = JSON.parse(localStorage.getItem('userData')).userid;
+    this.username = JSON.parse(localStorage.getItem('userData')).username;
     this.startUpdatingFeed();
   },
   beforeDestroy() {
@@ -50,10 +52,9 @@ export default {
       this.userLocation = location;
       const msg_location = {
         userid: this.userid,
-        location_latitude: this.location.latitude,
+        location_latitude: this.userLocation.latitude,
         location_longitude: this.userLocation.longitude
       };
-      console.log(msg_location);
       axios.post('/api/location', msg_location) // send location to backend, this updates msg_feed as well
       .then(
         response => {
