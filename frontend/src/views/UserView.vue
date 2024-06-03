@@ -44,15 +44,12 @@ export default {
                     const parsedUserData = JSON.parse(userData);
                     this.user = parsedUserData.username;
                     const userid = parsedUserData.userid;
-                    console.log('userid:', userid, ', username:', this.user);
                     // Make API call to get userdata
-                    console.log('Trying to call API');
                     const response = await axios.get('/api/userdata', {
                         params: {
                             userid: userid,
                         }
                     });
-                    console.log('API response got.');
                     if (response.status === 200) {
                         this.messages = response.data.msg_history;
                     } else {
