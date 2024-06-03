@@ -1,10 +1,10 @@
 <template>
     <div>
         <div v-if="user">
-            <h1>{{ user.username }}'s Messages</h1>
+            <h1>{{ user }}'s Messages</h1>
             <table class="message-table">
                 <tbody>
-                    <tr v-for="message in user.msg_history" :key="message.msg_id">
+                    <tr v-for="message in messages" :key="message.msg_id">
                         <td>{{ message.msg_content }}</td>
                         <td class="likes-cell">
                             <i>♡ &nbsp</i>
@@ -21,12 +21,14 @@
 </template>
   
 <script>
+
 import axios from 'axios';
 
 export default {
     data() {
         return {
             user: null,
+            messages: [],
             loading: true,
         };
     },
@@ -35,11 +37,30 @@ export default {
         this.loading = false;
     },
     methods: {
-        loadUserData() {
-            const userData = localStorage.getItem('userData');
-            if (userData) {
-                this.user = JSON.parse(userData);
-            } else {
+        async loadUserData() {
+            try {
+                const userData = localStorage.getItem('userData');
+                if (userData) {
+                    const parsedUserData = JSON.parse(userData);
+                    this.user = parsedUserData.username;
+                    const userid = parsedUserData.userid;
+                    // Make API call to get userdata
+                    const response = await axios.get('/api/userdata', {
+                        params: {
+                            userid: userid,
+                        }
+                    });
+                    if (response.status === 200) {
+                        this.messages = response.data.msg_history;
+                    } else {
+                        alert('Failed to load user data');
+                        this.$router.push('/login');
+                    }
+                } else {
+                    this.$router.push('/login');
+                }
+            } catch (error) {
+                console.error('An error occurred:', error.message);
                 this.$router.push('/login');
             }
         },

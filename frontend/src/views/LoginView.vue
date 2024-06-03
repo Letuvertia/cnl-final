@@ -49,13 +49,11 @@ export default {
                 });
 
                 if (response.data.auth_status === 'success') {
-                    const userData = response.data.data.userdata;
-                    const msgFeed = response.data.data.msg_feed;
+                    const userData = response.data.userdata;
 
                     localStorage.setItem('authToken', this.userLogin.username); // Store token in localStorage
                     localStorage.setItem('loginTime', new Date().getTime()); // Store login time
                     localStorage.setItem('userData', JSON.stringify(userData));
-                    localStorage.setItem('msgFeed', JSON.stringify(msgFeed));
 
                     this.$router.push("/main");
                 } else {
@@ -64,15 +62,6 @@ export default {
             } catch (error) {
                 alert('An error occurred: ' + error.message);
             }
-            /*const email = this.user.email;
-            const password = this.user.password;
-            if (this.login_check(email, password)) {
-                localStorage.setItem('authToken', email); // Store token in localStorage
-                localStorage.setItem('loginTime', new Date().getTime()); // Store login time
-                this.$router.push("/main"); // Redirect to user page
-            } else {
-                alert("Invalid email or password.");
-            }*/
         },
         login_check(email, password) {
             return email in this.user_db && this.user_db[email] === password;
