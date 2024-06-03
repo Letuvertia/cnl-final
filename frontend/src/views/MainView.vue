@@ -22,7 +22,6 @@ import Bubble from '../components/Bubble.vue';
 import UserLocation from '../components/UserLocation.vue';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:5000';
 
 export default {
   components: {
@@ -55,6 +54,7 @@ export default {
         location_latitude: this.userLocation.latitude,
         location_longitude: this.userLocation.longitude
       };
+      console.log(msg_location);
       axios.post('/api/location', msg_location) // send location to backend, this updates msg_feed as well
       .then(
         response => {

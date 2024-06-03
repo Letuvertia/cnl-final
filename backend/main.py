@@ -5,7 +5,7 @@ from sql import MySQLConnector
 # api server
 api = Flask(__name__)
 db_connector = MySQLConnector()
-# db_connector.clear_database() # run this line to empty the database
+db_connector.clear_database() # run this line to empty the database
 
 @api.route("/register", methods=['POST'])
 def register():
@@ -45,7 +45,7 @@ def login():
         return jsonify({'auth_status': 'fail', 'error': f'user {username} does not exists'}), 200
     if user['password'] != password:
         return jsonify({'auth_status': 'fail', 'error': 'incorrect password'}), 200
-    
+
     return jsonify({
         "auth_status": "success",
         "userdata": {

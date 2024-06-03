@@ -1,7 +1,7 @@
 <template>
   <div :class="['bubble', randomClass]" :style="bubbleStyle" @click="toggleLike">
     <p>{{ text }}</p>
-    <p>Likes: {{ likes }}</p>
+    <p>♡ &nbsp {{ likes }}</p>
   </div>
 </template>
 
@@ -44,8 +44,8 @@ export default {
         width: `${size}px`,
         height: `${size}px`,
         position: 'absolute',
-        top: `${this.top}px`,
-        left: `${this.left}px`,
+        top: `${this.top - size / 2}px`,
+        left: `${this.left - size / 2}px`,
         backgroundColor: this.color
       };
     }
