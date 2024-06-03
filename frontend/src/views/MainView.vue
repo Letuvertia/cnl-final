@@ -78,7 +78,7 @@ export default {
           msg_userid: this.userid,
           msg_content: text,
           msg_location_latitude: this.userLocation.latitude,
-          msg_location_longitude: this.location.longitude
+          msg_location_longitude: this.userLocation.longitude
         }
       };
       axios.put('/api/message', msg_put) // send new message to backend
@@ -92,9 +92,10 @@ export default {
       this.msgFeedsToBubbles();
     },
     getFeed() {
-      axios.get('/api/feed,', JSON.stringify({ userid : this.userid }))
+      axios.get(`/api/feed?userid=${this.userid}`)
       .then(
         response => {
+          console.log(response.data);
           this.msg_feed = JSON.parse(response.data);
         }
       )
