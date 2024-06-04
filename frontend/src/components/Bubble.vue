@@ -39,13 +39,14 @@ export default {
   },
   computed: {
     bubbleStyle() {
-      const size = 150 + this.likes * 20;
+      const size = 8 + this.likes * 0.4;
+      const ratio = window.innerWidth / window.innerHeight;
       return {
-        width: `${size}px`,
-        height: `${size}px`,
+        width: `${size}%`,
+        height: `${size * ratio}%`,
         position: 'absolute',
-        top: `${this.top - size / 2}px`,
-        left: `${this.left - size / 2}px`,
+        top: `${this.top - size / 2}%`,
+        left: `${this.left - size / 2}%`,
         backgroundColor: this.color
       };
     }
@@ -80,6 +81,6 @@ export default {
   margin: 0;
   font-size: 12px;
   position: absolute;
-  bottom: 10px;
+  bottom: 1%;
 }
 </style>

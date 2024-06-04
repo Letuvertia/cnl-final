@@ -42,18 +42,15 @@ export default {
   },
   mounted() {
     this.userid = JSON.parse(localStorage.getItem('userData')).userid;
-    console.log("user", this.userid, "log in");
     this.username = JSON.parse(localStorage.getItem('userData')).username;
     this.generateRandomProperties();
     this.startUpdatingFeed();
   },
   beforeDestroy() {
-    console.log("stop feeding", this.userid);
     clearInterval(this.feedIntervalId);
   },
   methods: {
     handleLocationUpdate(location) {
-      console.log("update location");
       this.userLocation = location;
       const msg_location = {
         userid: this.userid,
@@ -73,6 +70,7 @@ export default {
       );
     },
     startUpdatingFeed() {
+      this.getFeed();
       this.feedIntervalId = setInterval(this.getFeed, 3000);
     },
     newMessage(text) {
@@ -95,7 +93,6 @@ export default {
       this.getFeed(); // send a request for msg_feed to backend
     },
     getFeed() {
-      console.log("asking for userid=", this.userid);
       axios.get(`/api/feed?userid=${this.userid}`)
       .then(
         response => {
@@ -159,8 +156,8 @@ export default {
         let property;
         while (overlapping && attempts < maxAttempts) {
           property = {
-            t: Math.random() * (window.innerHeight - 200) + 50,
-            l: Math.random() * (window.innerWidth - 150) + 25,
+            t: Math.random() * 70 + 8,
+            l: Math.random() * 90 + 5,
             c: this.generateRandomColor()
           };
           overlapping = this.checkOverlap(property);
@@ -175,7 +172,7 @@ export default {
       for (const property of this.bubble_properties) {
         const dx = newProperty.l - property.l;
         const dy = newProperty.t - property.t;
-        if (dx * dx + dy * dy < 18000) {
+        if (dx * dx + dy * dy < 36) {
           return true;
         }
       }
@@ -184,7 +181,6 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     clearInterval(this.feedIntervalId);
-    console.log('stop feeding', this.userid);
     next();
   }
 };
