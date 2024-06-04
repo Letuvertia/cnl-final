@@ -10,15 +10,6 @@
             <h2> Messages </h2>
             <table class="message-table">
                 <tbody>
-                    <tr>
-                        <td>CNL sucks</td>
-                        <td class="likes-cell">
-                            <i>♡ &nbsp</i>
-                            <span>3</span>
-                        </td>
-                    </tr>
-
-
                     <tr v-for="message in messages" :key="message.msg_id">
                         <td>{{ message.msg_content }}</td>
                         <td class="likes-cell">
