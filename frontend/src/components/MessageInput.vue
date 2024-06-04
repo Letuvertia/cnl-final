@@ -1,6 +1,13 @@
 <template>
   <div class="input-container">
-    <input v-model="inputText" @keydown.enter="emitMessage" type="text" placeholder="Enter text here" />
+    <input
+      v-model="inputText"
+      type="text"
+      placeholder="Enter text here"
+      @keyup.enter="handleEnter"
+      @compositionstart="isComposing = true"
+      @compositionend="handleComposition"
+    />
     <button @click="emitMessage">Enter</button>
   </div>
 </template>
@@ -9,10 +16,19 @@
 export default {
   data() {
     return {
-      inputText: ''
+      inputText: '',
+      isComposing: false
     };
   },
   methods: {
+    handleEnter() {
+      if (!this.isComposing) {
+        this.emitMessage();
+      }
+    },
+    handleComposition() {
+      this.isComposing = false;
+    },
     emitMessage() {
       if (this.inputText.trim() !== '') {
         this.$emit('new-message', this.inputText);
