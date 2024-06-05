@@ -1,12 +1,18 @@
 <template>
-  <!-- No content to display -->
+   <div class="input-container">
+    <input v-model="inputLatitude" type="number" placeholder="Enter latitude" />
+    <input v-model="inputLongitude" type="number" placeholder="Enter longitude" />
+    <button @click="updateManualLocation">Update Location</button>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      userLocation: { latitude: 0, longitude: 0 }
+      userLocation: { latitude: 0, longitude: 0 },
+      inputLatitude: 0,
+      inputLongitude: 0
     };
   },
   mounted() {
@@ -18,18 +24,15 @@ export default {
   },
   methods: {
     updateLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
-      }
-      else {
-        console.log('Geolocation is not supported by this browser.');
-      }
+      this.$emit('location-updated', this.userLocation);
     },
-    showPosition(position) {
-      this.userLocation = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      };
+    updateManualLocation() {
+      if (this.inputLatitude && this.inputLongitude) {
+        this.userLocation = {
+          latitude: parseFloat(this.inputLatitude),
+          longitude: parseFloat(this.inputLongitude)
+        };
+      }
       this.$emit('location-updated', this.userLocation);
     },
     showError(error) {
