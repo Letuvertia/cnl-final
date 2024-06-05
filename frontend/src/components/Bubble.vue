@@ -1,7 +1,7 @@
 <template>
   <div :class="['bubble']" :style="bubbleStyle" @click="toggleLike">
     <p class="bubble-text">{{ content }}</p>
-    <p class="bubble-likes">Likes: {{ likes }}</p>
+    <p class="bubble-likes">♡ {{ likes }}</p>
   </div>
 </template>
 
