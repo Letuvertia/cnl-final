@@ -9,7 +9,7 @@
       </div>
     </header>
     <div>
-        <div v-if="user">
+        <div v-if="user" class="content">
             <h1> {{ user }}'s page </h1>
             <br>
             <h2> Info </h2>
@@ -84,3 +84,10 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.content {
+  margin-top: 70px; /* Adjust this value if your header's height changes */
+  padding: 1rem;
+}
+</style>
