@@ -56,7 +56,6 @@ export default {
     this.startUpdatingFeed();
   },
   beforeDestroy() {
-    console.log("stop feeding", this.userid);
     clearInterval(this.feedIntervalId);
   },
   methods: {
@@ -75,6 +74,7 @@ export default {
         });
     },
     startUpdatingFeed() {
+      this.getFeed();
       this.feedIntervalId = setInterval(this.getFeed, 3000);
     },
     newMessage(text) {
@@ -150,8 +150,8 @@ export default {
         let property;
         while (overlapping && attempts < maxAttempts) {
           property = {
-            t: Math.random() * (window.innerHeight - 200) + 50,
-            l: Math.random() * (window.innerWidth - 150) + 25,
+            t: Math.random() * 70 + 8,
+            l: Math.random() * 90 + 5,
             c: this.generateRandomColor()
           };
           overlapping = this.checkOverlap(property);
@@ -166,7 +166,7 @@ export default {
       for (const property of this.bubble_properties) {
         const dx = newProperty.l - property.l;
         const dy = newProperty.t - property.t;
-        if (dx * dx + dy * dy < 18000) {
+        if (dx * dx + dy * dy < 36) {
           return true;
         }
       }
