@@ -64,7 +64,8 @@ a,
 }
 
 .content {
-  padding-top: 60px; /* Adjust to compensate for the fixed navigation bar */
+  margin-top: 70px; /* Adjust to compensate for the fixed navigation bar */
+  padding: 1rem;
 }
 
 .message-table {
